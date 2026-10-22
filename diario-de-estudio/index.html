@@ -4,6 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0e0b14">
+  <script>
+    try {
+      const savedTheme = localStorage.getItem('diario-de-estudio:tema');
+      if (savedTheme === 'claro' || savedTheme === 'oscuro' || savedTheme === 'violeta') {
+        document.documentElement.dataset.theme = savedTheme;
+      }
+    } catch (error) {
+      // Si localStorage está bloqueado, se usa el tema oscuro por defecto.
+    }
+  </script>
   <title>Diario de Estudio</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -14,14 +24,24 @@
       <p class="app__subtitle">Registra tus sesiones y mantén viva tu racha.</p>
     </header>
 
-    <section class="streak" aria-live="polite">
-      <p class="streak__label">Racha actual</p>
-      <p class="streak__value">
-        <span id="streak-days">0</span>
-        <span class="streak__fire" aria-hidden="true">🔥</span>
-      </p>
-      <p class="streak__unit" id="streak-unit">días</p>
-      <p class="streak__best">Mejor racha: <strong id="best-streak">0</strong> <span id="best-streak-unit">días</span></p>
+    <section class="streak">
+      <div class="streak__data" aria-live="polite">
+        <p class="streak__label">Racha actual</p>
+        <p class="streak__value">
+          <span id="streak-days">0</span>
+          <span class="streak__icon" id="streak-icon" aria-hidden="true">🔥</span>
+        </p>
+        <p class="streak__unit" id="streak-unit">días</p>
+        <p class="streak__best">Mejor racha: <strong id="best-streak">0</strong> <span id="best-streak-unit">días</span></p>
+      </div>
+
+      <button type="button" class="streak__icon-toggle" id="icon-toggle" aria-expanded="false" aria-controls="icon-picker">
+        Cambiar icono
+      </button>
+
+      <div class="icon-picker" id="icon-picker" hidden>
+        <div class="icon-picker__grid" id="icon-picker-grid" role="group" aria-label="Elegir icono de racha"></div>
+      </div>
     </section>
 
     <section class="card">
@@ -52,6 +72,12 @@
       <ul id="sessions-list" class="sessions"></ul>
     </section>
   </main>
+
+  <div class="theme-switcher" role="group" aria-label="Tema de colores">
+    <button type="button" class="theme-switcher__button theme-switcher__button--claro" data-theme-value="claro" aria-label="Tema claro" title="Tema claro"></button>
+    <button type="button" class="theme-switcher__button theme-switcher__button--oscuro" data-theme-value="oscuro" aria-label="Tema oscuro" title="Tema oscuro"></button>
+    <button type="button" class="theme-switcher__button theme-switcher__button--violeta" data-theme-value="violeta" aria-label="Tema violeta" title="Tema violeta"></button>
+  </div>
 
   <script src="app.js"></script>
 </body>

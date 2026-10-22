@@ -3,7 +3,9 @@
 ## Proyecto
 
 - Web estática de tres archivos: `index.html`, `styles.css` y `app.js`. Sin frameworks, librerías, build, lint ni tests.
-- Interfaz en español, con tema oscuro y acento `#6c3baa`.
+- Interfaz en español; tema oscuro por defecto y acento base `#6c3baa`.
+- Temas: `claro`, `oscuro` (por defecto) y `violeta`. Se aplican con `data-theme` en `<html>` y se guardan en `diario-de-estudio:tema`. Usar las variables CSS de `:root`; no hardcodear colores de tema.
+- Icono de racha: 10 opciones definidas en `STREAK_ICONS`, guardadas en `diario-de-estudio:icono` y elegidas desde `#icon-picker`.
 
 ## Comandos
 
