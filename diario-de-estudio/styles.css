@@ -103,6 +103,22 @@ body {
   font-weight: 500;
 }
 
+.streak__best {
+  width: fit-content;
+  margin: 1rem auto 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(195, 161, 242, 0.2);
+  color: var(--text-soft);
+  font-size: 0.85rem;
+}
+
+.streak__best strong {
+  color: var(--accent-light);
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);

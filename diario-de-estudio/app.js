@@ -9,6 +9,8 @@ const topicInput = document.getElementById('topic');
 const minutesInput = document.getElementById('minutes');
 const streakDays = document.getElementById('streak-days');
 const streakUnit = document.getElementById('streak-unit');
+const bestStreakDays = document.getElementById('best-streak');
+const bestStreakUnit = document.getElementById('best-streak-unit');
 const sessionsList = document.getElementById('sessions-list');
 
 let sessions = loadSessions();
@@ -41,6 +43,22 @@ function formatDate(isoDate) {
     month: 'long',
     year: 'numeric',
   });
+}
+
+// Comprueba que sea una fecha ISO real (por ejemplo, rechaza 2026-02-30).
+function isValidISODate(isoDate) {
+  if (typeof isoDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) {
+    return false;
+  }
+
+  const [year, month, day] = isoDate.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
 }
 
 // ---------- Persistencia ----------
@@ -87,12 +105,42 @@ function calculateStreak() {
   return streak;
 }
 
+function calculateBestStreak() {
+  const today = todayISO();
+  const days = [...new Set(sessions.map((session) => session.date))]
+    // Las fechas futuras todavía no cuentan como racha conseguida.
+    .filter((date) => isValidISODate(date) && date <= today)
+    .sort();
+
+  let best = 0;
+  let run = 0;
+  let previous = '';
+
+  for (const date of days) {
+    if (previous !== '' && date === addDays(previous, 1)) {
+      run += 1;
+    } else {
+      run = 1;
+    }
+
+    best = Math.max(best, run);
+    previous = date;
+  }
+
+  return best;
+}
+
 // ---------- Interfaz ----------
 
 function renderStreak() {
   const streak = calculateStreak();
+  const bestStreak = calculateBestStreak();
+
   streakDays.textContent = String(streak);
   streakUnit.textContent = streak === 1 ? 'día' : 'días';
+
+  bestStreakDays.textContent = String(bestStreak);
+  bestStreakUnit.textContent = bestStreak === 1 ? 'día' : 'días';
 }
 
 function renderSessions() {
