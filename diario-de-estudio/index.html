@@ -3,80 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0e0b14">
-  <script>
-    try {
-      const savedTheme = localStorage.getItem('diario-de-estudio:tema');
-      if (savedTheme === 'claro' || savedTheme === 'oscuro' || savedTheme === 'violeta') {
-        document.documentElement.dataset.theme = savedTheme;
-      }
-    } catch (error) {
-      // Si localStorage está bloqueado, se usa el tema oscuro por defecto.
-    }
-  </script>
+  <meta name="theme-color" content="#070806">
   <title>Diario de Estudio</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="app">
-    <header class="app__header">
-      <h1>Diario de Estudio</h1>
-      <p class="app__subtitle">Registra tus sesiones y mantén viva tu racha.</p>
+  <div class="page">
+    <header class="masthead">
+      <h1 class="masthead__title">Diario de Estudio<span class="masthead__dot" aria-hidden="true">.</span></h1>
+      <p class="masthead__intro">Registra tus sesiones y mantén viva tu racha.</p>
     </header>
 
-    <section class="streak">
-      <div class="streak__data" aria-live="polite">
-        <p class="streak__label">Racha actual</p>
-        <p class="streak__value">
-          <span id="streak-days">0</span>
-          <span class="streak__icon" id="streak-icon" aria-hidden="true">🔥</span>
-        </p>
-        <p class="streak__unit" id="streak-unit">días</p>
-        <p class="streak__best">Mejor racha: <strong id="best-streak">0</strong> <span id="best-streak-unit">días</span></p>
+    <main>
+      <div class="workspace">
+        <section class="streak" aria-labelledby="streak-title">
+          <div class="streak__content" aria-live="polite" aria-atomic="true">
+            <h2 class="streak__label" id="streak-title">Racha actual</h2>
+            <p class="streak__value">
+              <span class="streak__number" id="streak-days">0</span>
+              <span class="streak__unit" id="streak-unit">días</span>
+            </p>
+            <p class="streak__best">Mejor racha <strong id="best-streak">0</strong> <span id="best-streak-unit">días</span></p>
+          </div>
+
+          <div class="streak__mark" aria-hidden="true">
+            <svg viewBox="0 0 240 240" focusable="false">
+              <defs>
+                <clipPath id="lime-body-clip">
+                  <path d="M120 48 C150 48 174 78 176 120 C178 160 154 192 121 199 C119 200 117 200 115 199 C82 192 58 160 60 120 C62 78 90 48 120 48 Z"/>
+                </clipPath>
+              </defs>
+
+              <circle class="lime-ring" cx="120" cy="120" r="99"/>
+              <ellipse class="lime-glow" cx="120" cy="204" rx="62" ry="9"/>
+
+              <path class="lime-body" d="M120 48 C150 48 174 78 176 120 C178 160 154 192 121 199 C119 200 117 200 115 199 C82 192 58 160 60 120 C62 78 90 48 120 48 Z"/>
+
+              <g clip-path="url(#lime-body-clip)">
+                <path class="lime-shade" d="M63 133 C64 166 84 190 112 195 C88 184 72 161 71 131 C70 106 79 84 97 70 C75 82 62 105 63 133 Z"/>
+                <path class="lime-highlight" d="M86 95 C77 112 75 138 80 160"/>
+                <path class="lime-shadow-line" d="M170 121 C174 145 164 169 146 184"/>
+                <circle class="lime-speck" cx="100" cy="118" r="2.2"/>
+                <circle class="lime-speck" cx="151" cy="97" r="1.8"/>
+                <circle class="lime-speck" cx="137" cy="153" r="2.4"/>
+                <circle class="lime-speck" cx="162" cy="140" r="1.5"/>
+                <circle class="lime-speck" cx="107" cy="168" r="1.7"/>
+                <circle class="lime-speck" cx="88" cy="145" r="1.3"/>
+              </g>
+
+              <path class="lime-stem" d="M136 56 C134 47 137 39 144 33"/>
+              <path class="lime-leaf" d="M139 55 C147 36 164 27 184 29 C182 48 168 64 145 67 C141 63 139 59 139 55 Z"/>
+              <path class="lime-vein" d="M146 64 C157 52 169 43 181 38"/>
+              <path class="lime-tip" d="M117 198 C118 201 120 202 122 199"/>
+              <path class="lime-top-light" d="M92 81 C104 71 120 67 135 69"/>
+            </svg>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="new-session-title">
+          <h2 class="card__title" id="new-session-title">Nueva sesión</h2>
+
+          <form id="session-form" class="form">
+            <div class="field">
+              <label for="date">Fecha</label>
+              <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="field">
+              <label for="topic">Tema</label>
+              <input type="text" id="topic" name="topic" placeholder="Ej.: Repasar JavaScript" required>
+            </div>
+
+            <div class="field">
+              <label for="minutes">Minutos</label>
+              <input type="number" id="minutes" name="minutes" min="1" step="1" inputmode="numeric" placeholder="Ej.: 45" required>
+            </div>
+
+            <button type="submit" class="button">Registrar sesión</button>
+          </form>
+
+          <p class="form__note">Tus sesiones quedan guardadas en este navegador.</p>
+        </section>
       </div>
 
-      <button type="button" class="streak__icon-toggle" id="icon-toggle" aria-expanded="false" aria-controls="icon-picker">
-        Cambiar icono
-      </button>
-
-      <div class="icon-picker" id="icon-picker" hidden>
-        <div class="icon-picker__grid" id="icon-picker-grid" role="group" aria-label="Elegir icono de racha"></div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2 class="card__title">Nueva sesión</h2>
-
-      <form id="session-form" class="form">
-        <div class="field">
-          <label for="date">Fecha</label>
-          <input type="date" id="date" name="date" required>
+      <section class="history" aria-labelledby="history-title">
+        <div class="history__head">
+          <h2 class="history__title" id="history-title">Sesiones</h2>
+          <span class="history__rule" aria-hidden="true"></span>
         </div>
-
-        <div class="field">
-          <label for="topic">Tema</label>
-          <input type="text" id="topic" name="topic" placeholder="Ej.: Repasar JavaScript" required>
-        </div>
-
-        <div class="field">
-          <label for="minutes">Minutos</label>
-          <input type="number" id="minutes" name="minutes" min="1" step="1" inputmode="numeric" placeholder="Ej.: 45" required>
-        </div>
-
-        <button type="submit" class="button">Registrar sesión</button>
-      </form>
-    </section>
-
-    <section class="history">
-      <h2 class="history__title">Sesiones</h2>
-      <ul id="sessions-list" class="sessions"></ul>
-    </section>
-  </main>
-
-  <div class="theme-switcher" role="group" aria-label="Tema de colores">
-    <button type="button" class="theme-switcher__button theme-switcher__button--claro" data-theme-value="claro" aria-label="Tema claro" title="Tema claro"></button>
-    <button type="button" class="theme-switcher__button theme-switcher__button--oscuro" data-theme-value="oscuro" aria-label="Tema oscuro" title="Tema oscuro"></button>
-    <button type="button" class="theme-switcher__button theme-switcher__button--violeta" data-theme-value="violeta" aria-label="Tema violeta" title="Tema violeta"></button>
+        <ul id="sessions-list" class="sessions"></ul>
+      </section>
+    </main>
   </div>
 
   <script src="app.js"></script>

@@ -1,31 +1,7 @@
 'use strict';
 
-// Claves de persistencia.
+// Clave de persistencia de las sesiones.
 const STORAGE_KEY = 'diario-de-estudio:sesiones';
-const THEME_KEY = 'diario-de-estudio:tema';
-const ICON_KEY = 'diario-de-estudio:icono';
-
-const THEMES = ['claro', 'oscuro', 'violeta'];
-const DEFAULT_THEME = 'oscuro';
-const THEME_COLORS = {
-  claro: '#f6f2fb',
-  oscuro: '#0e0b14',
-  violeta: '#180d2b',
-};
-
-const STREAK_ICONS = [
-  { emoji: '🔥', name: 'Fuego' },
-  { emoji: '⚡', name: 'Rayo' },
-  { emoji: '⭐', name: 'Estrella' },
-  { emoji: '🚀', name: 'Cohete' },
-  { emoji: '🧠', name: 'Cerebro' },
-  { emoji: '📚', name: 'Libros' },
-  { emoji: '💪', name: 'Fuerza' },
-  { emoji: '🏆', name: 'Trofeo' },
-  { emoji: '🌱', name: 'Brote' },
-  { emoji: '🎯', name: 'Objetivo' },
-];
-const DEFAULT_ICON = STREAK_ICONS[0].emoji;
 
 const form = document.getElementById('session-form');
 const dateInput = document.getElementById('date');
@@ -36,15 +12,8 @@ const streakUnit = document.getElementById('streak-unit');
 const bestStreakDays = document.getElementById('best-streak');
 const bestStreakUnit = document.getElementById('best-streak-unit');
 const sessionsList = document.getElementById('sessions-list');
-const themeButtons = document.querySelectorAll('[data-theme-value]');
-const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-const iconToggle = document.getElementById('icon-toggle');
-const iconPicker = document.getElementById('icon-picker');
-const iconPickerGrid = document.getElementById('icon-picker-grid');
-const streakIcon = document.getElementById('streak-icon');
 
 let sessions = loadSessions();
-let currentIcon = DEFAULT_ICON;
 
 // ---------- Fechas (siempre en hora local) ----------
 
@@ -69,11 +38,13 @@ function addDays(isoDate, days) {
 function formatDate(isoDate) {
   const [year, month, day] = isoDate.split('-').map(Number);
   const date = new Date(year, month - 1, day);
-  return date.toLocaleDateString('es-ES', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+  return date
+    .toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    })
+    .replace('.', '');
 }
 
 // Comprueba que sea una fecha ISO real (por ejemplo, rechaza 2026-02-30).
@@ -114,100 +85,6 @@ function saveSessions() {
     // Si el navegador bloquea localStorage, la app sigue funcionando en memoria.
     console.warn('No se pudieron guardar las sesiones:', error);
   }
-}
-
-function loadSetting(key, fallback, isValid) {
-  try {
-    const value = localStorage.getItem(key);
-    return isValid(value) ? value : fallback;
-  } catch (error) {
-    return fallback;
-  }
-}
-
-function saveSetting(key, value) {
-  try {
-    localStorage.setItem(key, value);
-  } catch (error) {
-    console.warn(`No se pudo guardar ${key}:`, error);
-  }
-}
-
-// ---------- Tema e icono ----------
-
-function setTheme(theme) {
-  const nextTheme = THEMES.includes(theme) ? theme : DEFAULT_THEME;
-
-  document.documentElement.dataset.theme = nextTheme;
-  themeButtons.forEach((button) => {
-    button.setAttribute('aria-pressed', String(button.dataset.themeValue === nextTheme));
-  });
-
-  if (themeColorMeta) {
-    themeColorMeta.setAttribute('content', THEME_COLORS[nextTheme]);
-  }
-
-  saveSetting(THEME_KEY, nextTheme);
-}
-
-function renderIcon() {
-  streakIcon.textContent = currentIcon;
-
-  for (const option of iconPickerGrid.querySelectorAll('[data-icon]')) {
-    option.setAttribute('aria-pressed', String(option.dataset.icon === currentIcon));
-  }
-}
-
-function setIcon(icon) {
-  if (!STREAK_ICONS.some((item) => item.emoji === icon)) {
-    return;
-  }
-
-  currentIcon = icon;
-  saveSetting(ICON_KEY, icon);
-  renderIcon();
-}
-
-function buildIconPicker() {
-  iconPickerGrid.replaceChildren();
-
-  for (const { emoji, name } of STREAK_ICONS) {
-    const option = document.createElement('button');
-    option.type = 'button';
-    option.className = 'icon-picker__option';
-    option.dataset.icon = emoji;
-    option.textContent = emoji;
-    option.title = name;
-    option.setAttribute('aria-label', `Usar icono ${name}`);
-
-    option.addEventListener('click', () => {
-      setIcon(emoji);
-      closeIconPicker();
-      iconToggle.focus();
-    });
-
-    iconPickerGrid.append(option);
-  }
-
-  renderIcon();
-}
-
-function openIconPicker() {
-  iconPicker.hidden = false;
-  iconToggle.setAttribute('aria-expanded', 'true');
-
-  const activeOption = [...iconPickerGrid.querySelectorAll('[data-icon]')].find(
-    (option) => option.dataset.icon === currentIcon
-  );
-
-  if (activeOption) {
-    activeOption.focus();
-  }
-}
-
-function closeIconPicker() {
-  iconPicker.hidden = true;
-  iconToggle.setAttribute('aria-expanded', 'false');
 }
 
 // ---------- Racha ----------
@@ -274,7 +151,8 @@ function renderSessions() {
   if (sessions.length === 0) {
     const empty = document.createElement('li');
     empty.className = 'sessions__empty';
-    empty.textContent = 'Todavía no has registrado ninguna sesión.';
+    empty.textContent =
+      'Todavía no hay sesiones. Registra la primera para empezar tu racha.';
     sessionsList.append(empty);
     return;
   }
@@ -291,6 +169,11 @@ function renderSessions() {
     const item = document.createElement('li');
     item.className = 'session';
 
+    const date = document.createElement('time');
+    date.className = 'session__date';
+    date.dateTime = session.date;
+    date.textContent = formatDate(session.date);
+
     const info = document.createElement('div');
     info.className = 'session__info';
 
@@ -298,17 +181,13 @@ function renderSessions() {
     topic.className = 'session__topic';
     topic.textContent = session.topic;
 
-    const date = document.createElement('p');
-    date.className = 'session__date';
-    date.textContent = formatDate(session.date);
-
-    info.append(topic, date);
+    info.append(topic);
 
     const minutes = document.createElement('span');
     minutes.className = 'session__minutes';
     minutes.textContent = `${session.minutes} min`;
 
-    item.append(info, minutes);
+    item.append(date, info, minutes);
     sessionsList.append(item);
   }
 }
@@ -346,44 +225,7 @@ form.addEventListener('submit', (event) => {
   topicInput.focus();
 });
 
-themeButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    setTheme(button.dataset.themeValue);
-  });
-});
-
-iconToggle.addEventListener('click', () => {
-  if (iconPicker.hidden) {
-    openIconPicker();
-  } else {
-    closeIconPicker();
-    iconToggle.focus();
-  }
-});
-
-document.addEventListener('click', (event) => {
-  if (iconPicker.hidden) {
-    return;
-  }
-
-  if (!iconPicker.contains(event.target) && !iconToggle.contains(event.target)) {
-    closeIconPicker();
-  }
-});
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && !iconPicker.hidden) {
-    closeIconPicker();
-    iconToggle.focus();
-  }
-});
-
 // ---------- Inicio ----------
 
 dateInput.value = todayISO();
-setTheme(loadSetting(THEME_KEY, DEFAULT_THEME, (value) => THEMES.includes(value)));
-currentIcon = loadSetting(ICON_KEY, DEFAULT_ICON, (icon) =>
-  STREAK_ICONS.some((item) => item.emoji === icon)
-);
-buildIconPicker();
 render();
