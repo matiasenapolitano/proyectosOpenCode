@@ -60,11 +60,11 @@ const CATEGORY_CONFIG = {
 
 const TRANSLATIONS = {
   es: {
-    documentTitle: 'Diario de Estudio',
-    title: 'Diario de Estudio',
-    intro: 'Registra tu estudio, ejercicio y agua. Mantén vivas tus rachas.',
-    streaksTitle: 'Rachas',
-    streaksHint: 'Elegí una categoría para registrar.',
+    documentTitle: 'Pulpa — diario de estudio, ejercicio y agua',
+    title: 'Pulpa',
+    intro: 'Estudio, ejercicio y agua. Un diario para tus días.',
+    streaksTitle: 'Tus rachas',
+    streaksHint: 'Elegí una categoría.',
     study: 'Estudio',
     exercise: 'Ejercicio',
     water: 'Agua',
@@ -135,11 +135,11 @@ const TRANSLATIONS = {
     locale: 'es-ES',
   },
   en: {
-    documentTitle: 'Study Journal',
-    title: 'Study Journal',
-    intro: 'Log your study, exercise, and water. Keep your streaks alive.',
-    streaksTitle: 'Streaks',
-    streaksHint: 'Choose a category to log.',
+    documentTitle: 'Pulpa — study, exercise, and water',
+    title: 'Pulpa',
+    intro: 'Study, exercise, and water. A journal for your days.',
+    streaksTitle: 'Your streaks',
+    streaksHint: 'Choose a category.',
     study: 'Study',
     exercise: 'Exercise',
     water: 'Water',

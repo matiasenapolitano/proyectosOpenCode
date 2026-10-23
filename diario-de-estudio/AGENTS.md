@@ -4,24 +4,30 @@
 
 - Web estática de tres archivos: `index.html`, `styles.css` y `app.js`. Sin frameworks, librerías, build, lint ni tests.
 - La app registra tres categorías independientes: estudio, ejercicio y agua. Cada una tiene su propio formulario, historial y racha.
-- La estética base es un cuaderno nocturno: fondo casi negro, grilla tenue teñida por el acento, paneles oscuros, tipografía editorial y acentos de fruta.
-- Hay tres variantes visuales de fruta: lima `#B8E63C` (predeterminada), manzana `#E14B42` y uva `#B18CF5`.
-- La fruta cambia únicamente el acento de la interfaz y el icono SVG decorativo. No cambiar estructura, layout, tipografía, espaciado, formularios, historial ni lógica al agregar variantes.
-- Los neutros de la interfaz (`--paper`, `--panel`, `--ink`, `--ink-soft`, `--muted`, `--line`, `--line-strong`, `--field-border`, `--field`, `--field-focus`) deben ser grises cálidos neutros, nunca oliva ni verdes. Al cambiar a manzana o uva no deben quedar bordes, líneas, textos, iconos, botones ni campos verdes.
-- El verde solo puede aparecer en el acento lima (incluida la grilla teñida por ese acento) y en el swatch de lima cuando está activo o en hover. Con manzana o uva activos no debe quedar verde visible: los swatches inactivos se muestran en escala de grises.
-- Los iconos de los tres accesos usan `currentColor` y toman el acento activo. El icono de fruta completo (cuerpo, hoja, tallo, venas y detalles) también se colorea con `--accent`, `--accent-deep` y `--accent-pale`; no hay tokens verdes para hojas o tallos.
+- La estética base es un diario claro y minimalista: papel neutro, superficies blancas, tipografía sans en toda la interfaz, tarjeta de rachas teñida por la fruta y un acento vivo reservado para el estado activo y la acción principal.
+- La marca visible es `Pulpa`. El título del documento es `Pulpa — diario de estudio, ejercicio y agua` en español y `Pulpa — study, exercise, and water` en inglés. El título del masthead es siempre `Pulpa` en ambos idiomas.
+- La tipografía de titulares es `Bahnschrift` / `Aptos Display` / `Segoe UI Variable Display` con fallback a `Helvetica Neue` y `Arial`; el cuerpo usa `Aptos` / `Segoe UI Variable Text` / `Segoe UI` / `system-ui`. No volver a usar serif ni agregar fuentes externas.
+- Hay tres variantes visuales de fruta: lima `#B8E63C` (predeterminada), manzana `#E14B42` y uva `#B18CF5` para los swatches. Los acentos de interfaz son lima `#C9F24D`, manzana `#D93A31` y uva `#7C4EE8`.
+- La fruta cambia el acento, el tinte de la tarjeta de rachas y el marcador de fruta del título. No cambiar estructura, layout, tipografía, espaciado, formularios, historial ni lógica al agregar variantes.
+- Los neutros de la interfaz (`--paper`, `--surface`, `--surface-soft`, `--ink`, `--ink-soft`, `--muted`, `--line`, `--line-strong`, `--field-border`, `--field`, `--field-focus`) deben ser grises neutros, nunca oliva ni verdes. Al cambiar a manzana o uva no deben quedar bordes, líneas, textos, iconos, botones ni campos verdes.
+- El verde solo puede aparecer en el acento lima, en el tinte `--accent-wash` de lima, en el swatch de lima activo o en hover y en el pequeño marcador del título. Con manzana o uva activos no debe quedar verde visible: los swatches inactivos se muestran en escala de grises.
+- No hay ilustración grande de fruta. El único marcador de fruta es el punto CSS con hoja que sigue al título (`.masthead__dot`), y se colorea con `--accent` y `--accent-deep`.
+- Los iconos de los tres accesos usan `currentColor`; en la fila activa toman `--accent-ink`.
+- No usar `--accent` como color de texto pequeño sobre blanco: para texto, métricas e iconos sobre superficies claras usar `--accent-deep`.
 - El control de fruta y el selector de idioma viven juntos en la parte superior derecha del masthead. No moverlos a otra zona sin pedido explícito.
-- La fruta activa se expresa con `data-fruit` en `<html>`: `lima`, `manzana` o `uva`. Los tokens de acento son `--accent`, `--accent-pale`, `--accent-deep`, `--accent-shade`, `--accent-ink`, `--accent-glow-soft` y `--accent-wash`.
+- La fruta activa se expresa con `data-fruit` en `<html>`: `lima`, `manzana` o `uva`. Los tokens de acento son `--accent`, `--accent-hover`, `--accent-pale`, `--accent-deep`, `--accent-ink`, `--accent-glow-soft` y `--accent-wash`.
 - Los colores fijos de los swatches del selector son `--fruit-lima`, `--fruit-manzana` y `--fruit-uva`; los inactivos usan `filter: grayscale(1)` y opacidad reducida. El activo, el hover y el foco visible recuperan su color.
+- Contraste: los textos pequeños usan `--muted` (`#6C6F67`). Los acentos de manzana y uva están elegidos para que el texto blanco de la fila activa y del botón mantenga contraste AA; no aclararlos sin volver a comprobarlo.
 
 ## Interfaz principal
 
-- La tarjeta izquierda se llama `Rachas` y contiene tres paneles de acceso apilados, en este orden: `Estudio`, `Ejercicio`, `Agua`.
-- Cada panel es un botón con icono, nombre, racha actual (número grande + unidad) y mejor racha. El panel activo se marca con `aria-pressed="true"` y acento; los demás quedan neutros.
+- La tarjeta izquierda se llama `Tus rachas` y contiene tres paneles de acceso apilados, en este orden: `Estudio`, `Ejercicio`, `Agua`.
+- Cada panel es un botón con icono, nombre, racha actual (número grande + unidad) y mejor racha. El panel activo se marca con `aria-pressed="true"`, se rellena con `--accent` y usa `--accent-ink`; los demás quedan blancos sobre el tinte de la tarjeta.
+- La tarjeta de rachas tiene fondo `--accent-wash`, radio de 30 px y no lleva borde. El formulario es blanco, con borde y radio de 22 px. Mantener esa jerarquía; no convertir ambas tarjetas en el mismo tratamiento.
 - Al hacer clic en un panel se muestra su formulario a la derecha y se ocultan los otros dos. El formulario, la nota inferior y el título del historial cambian según la categoría.
 - La categoría activa vive solo en memoria (`activeCategory`); al recargar vuelve a `Estudio`. Los datos de las tres categorías sí persisten.
 - El historial también se filtra por la categoría activa: muestra sesiones de estudio, ejercicios o días de agua.
-- La ilustración de fruta se conserva a la derecha de los paneles en escritorio. Se oculta con `max-width: 1050px` para dejar lugar a los accesos en pantallas angostas.
+- El workspace tiene dos columnas en escritorio. A `980px` o menos pasa a una columna; el masthead apila título e intro a `760px` o menos. En móvil se probaron 390 y 320 px.
 - Los formularios son tres bloques estáticos dentro de la misma tarjeta y se alternan con el atributo `hidden`. La regla global `[hidden] { display: none !important; }` evita que los `display: grid` de los formularios los vuelvan a mostrar.
 
 ## Formularios

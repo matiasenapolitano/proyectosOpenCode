@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080807">
+  <meta name="theme-color" content="#f4f4f1">
   <script>
     // Aplica fruta e idioma guardados antes de pintar para evitar saltos visuales.
     try {
@@ -20,7 +20,7 @@
       // Si localStorage está bloqueado, quedan lima y español por defecto.
     }
   </script>
-  <title>Diario de Estudio</title>
+  <title>Pulpa — diario de estudio, ejercicio y agua</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -72,8 +72,8 @@
       </div>
 
       <div class="masthead__body">
-        <h1 class="masthead__title"><span data-i18n="title">Diario de Estudio</span><span class="masthead__dot" aria-hidden="true">.</span></h1>
-        <p class="masthead__intro" data-i18n="intro">Registra tus sesiones y mantén viva tu racha.</p>
+        <h1 class="masthead__title"><span data-i18n="title">Pulpa</span><span class="masthead__dot" aria-hidden="true"></span></h1>
+        <p class="masthead__intro" data-i18n="intro">Estudio, ejercicio y agua. Un diario para tus días.</p>
       </div>
     </header>
 
@@ -141,97 +141,6 @@
               </button>
             </div>
 
-            <div class="streaks__mark" aria-hidden="true">
-            <svg class="fruit-mark fruit--lima" viewBox="0 0 240 240" focusable="false">
-              <defs>
-                <clipPath id="lime-clip">
-                  <path d="M120 48 C150 48 174 78 176 120 C178 160 154 192 121 199 C119 200 117 200 115 199 C82 192 58 160 60 120 C62 78 90 48 120 48 Z"/>
-                </clipPath>
-              </defs>
-
-              <circle class="fruit-ring" cx="120" cy="120" r="99"/>
-              <ellipse class="fruit-glow" cx="120" cy="204" rx="62" ry="9"/>
-
-              <path class="fruit-body" d="M120 48 C150 48 174 78 176 120 C178 160 154 192 121 199 C119 200 117 200 115 199 C82 192 58 160 60 120 C62 78 90 48 120 48 Z"/>
-
-              <g clip-path="url(#lime-clip)">
-                <path class="fruit-shade" d="M63 133 C64 166 84 190 112 195 C88 184 72 161 71 131 C70 106 79 84 97 70 C75 82 62 105 63 133 Z"/>
-                <path class="fruit-highlight" d="M86 95 C77 112 75 138 80 160"/>
-                <path class="fruit-shadow-line" d="M170 121 C174 145 164 169 146 184"/>
-                <circle class="fruit-speck" cx="100" cy="118" r="2.2"/>
-                <circle class="fruit-speck" cx="151" cy="97" r="1.8"/>
-                <circle class="fruit-speck" cx="137" cy="153" r="2.4"/>
-                <circle class="fruit-speck" cx="162" cy="140" r="1.5"/>
-                <circle class="fruit-speck" cx="107" cy="168" r="1.7"/>
-                <circle class="fruit-speck" cx="88" cy="145" r="1.3"/>
-              </g>
-
-              <path class="fruit-stem" d="M136 56 C134 47 137 39 144 33"/>
-              <path class="fruit-leaf" d="M139 55 C147 36 164 27 184 29 C182 48 168 64 145 67 C141 63 139 59 139 55 Z"/>
-              <path class="fruit-vein" d="M146 64 C157 52 169 43 181 38"/>
-              <path class="fruit-tip" d="M117 198 C118 201 120 202 122 199"/>
-              <path class="fruit-top-light" d="M92 81 C104 71 120 67 135 69"/>
-            </svg>
-
-            <svg class="fruit-mark fruit--manzana" viewBox="0 0 240 240" focusable="false">
-              <defs>
-                <clipPath id="apple-clip">
-                  <path d="M120 80 C110 60 88 56 71 70 C52 88 56 124 72 154 C86 180 104 196 120 196 C136 196 154 180 168 154 C184 124 188 88 169 70 C152 56 130 60 120 80 Z"/>
-                </clipPath>
-              </defs>
-
-              <circle class="fruit-ring" cx="120" cy="120" r="99"/>
-              <ellipse class="fruit-glow" cx="120" cy="204" rx="58" ry="9"/>
-
-              <path class="fruit-body" d="M120 80 C110 60 88 56 71 70 C52 88 56 124 72 154 C86 180 104 196 120 196 C136 196 154 180 168 154 C184 124 188 88 169 70 C152 56 130 60 120 80 Z"/>
-
-              <g clip-path="url(#apple-clip)">
-                <path class="fruit-shade" d="M154 92 C168 114 166 144 150 168 C165 150 174 124 166 100 Z"/>
-                <path class="fruit-highlight" d="M92 96 C82 116 84 142 94 160"/>
-                <circle class="fruit-speck" cx="151" cy="112" r="2.1"/>
-                <circle class="fruit-speck" cx="139" cy="165" r="1.8"/>
-                <circle class="fruit-speck" cx="105" cy="176" r="1.6"/>
-                <circle class="fruit-speck" cx="88" cy="126" r="1.4"/>
-                <circle class="fruit-speck" cx="161" cy="139" r="1.3"/>
-              </g>
-
-              <path class="fruit-stem" d="M120 80 C120 64 124 52 132 42"/>
-              <path class="fruit-leaf" d="M130 50 C140 30 160 22 179 26 C177 46 162 60 138 62 C134 58 132 54 130 50 Z"/>
-              <path class="fruit-vein" d="M138 58 C149 46 161 38 173 32"/>
-              <path class="fruit-top-light" d="M90 84 C101 73 115 68 129 69"/>
-            </svg>
-
-            <svg class="fruit-mark fruit--uva" viewBox="0 0 240 240" focusable="false">
-              <circle class="fruit-ring" cx="120" cy="120" r="99"/>
-              <ellipse class="fruit-glow" cx="120" cy="204" rx="58" ry="9"/>
-
-              <path class="fruit-stem" d="M120 92 C119 66 123 50 132 40"/>
-              <path class="fruit-leaf" d="M132 50 C142 30 162 22 181 26 C179 46 164 60 140 62 C136 58 134 54 132 50 Z"/>
-              <path class="fruit-vein" d="M140 58 C151 46 163 38 175 32"/>
-
-              <g>
-                <circle class="fruit-berry" cx="100" cy="104" r="22"/>
-                <circle class="fruit-berry" cx="140" cy="104" r="22"/>
-                <circle class="fruit-berry" cx="80" cy="130" r="22"/>
-                <circle class="fruit-berry" cx="120" cy="130" r="22"/>
-                <circle class="fruit-berry" cx="160" cy="130" r="22"/>
-                <circle class="fruit-berry" cx="100" cy="156" r="22"/>
-                <circle class="fruit-berry" cx="140" cy="156" r="22"/>
-                <circle class="fruit-berry" cx="120" cy="180" r="21"/>
-              </g>
-
-              <g>
-                <circle class="fruit-berry-light" cx="93" cy="97" r="5"/>
-                <circle class="fruit-berry-light" cx="133" cy="97" r="5"/>
-                <circle class="fruit-berry-light" cx="73" cy="123" r="5"/>
-                <circle class="fruit-berry-light" cx="113" cy="123" r="5"/>
-                <circle class="fruit-berry-light" cx="153" cy="123" r="5"/>
-                <circle class="fruit-berry-light" cx="93" cy="149" r="5"/>
-                <circle class="fruit-berry-light" cx="133" cy="149" r="5"/>
-                <circle class="fruit-berry-light" cx="113" cy="173" r="4.5"/>
-              </g>
-            </svg>
-            </div>
           </div>
         </section>
 
@@ -343,7 +252,6 @@
       <section class="history" aria-labelledby="history-title">
         <div class="history__head">
           <h2 class="history__title" id="history-title">Sesiones</h2>
-          <span class="history__rule" aria-hidden="true"></span>
         </div>
         <ul id="history-list" class="sessions"></ul>
       </section>
