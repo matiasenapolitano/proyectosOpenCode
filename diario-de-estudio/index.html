@@ -79,21 +79,69 @@
 
     <main>
       <div class="workspace">
-        <section class="streak" aria-labelledby="streak-title">
-          <div class="streak__content" aria-live="polite" aria-atomic="true">
-            <h2 class="streak__label" id="streak-title" data-i18n="streakLabel">Racha actual</h2>
-            <p class="streak__value">
-              <span class="streak__number" id="streak-days">0</span>
-              <span class="streak__unit" id="streak-unit">días</span>
-            </p>
-            <p class="streak__best">
-              <span data-i18n="bestStreak">Mejor racha</span>
-              <strong id="best-streak">0</strong>
-              <span id="best-streak-unit">días</span>
-            </p>
+        <section class="streaks" aria-labelledby="streaks-title">
+          <div class="streaks__head">
+            <h2 class="streaks__title" id="streaks-title" data-i18n="streaksTitle">Rachas</h2>
+            <p class="streaks__hint" data-i18n="streaksHint">Elegí una categoría para registrar.</p>
           </div>
 
-          <div class="streak__mark" aria-hidden="true">
+          <div class="streaks__layout">
+            <div class="access-list">
+              <button type="button" class="access-panel" data-category="study" aria-pressed="true" aria-controls="study-form">
+                <span class="access-panel__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 5.5c2.6-.6 5.1-.1 8 1.4v11.6c-2.9-1.5-5.4-2-8-1.4z"/>
+                    <path d="M20 5.5c-2.6-.6-5.1-.1-8 1.4v11.6c2.9-1.5 5.4-2 8-1.4z"/>
+                  </svg>
+                </span>
+                <span class="access-panel__body">
+                  <span class="access-panel__name" data-i18n="study">Estudio</span>
+                  <span class="access-panel__best"><span data-i18n="bestShort">Mejor</span> <strong id="study-best">0</strong> <span id="study-best-unit">días</span></span>
+                </span>
+                <span class="access-panel__streak">
+                  <span class="visually-hidden" data-i18n="streakLabel">Racha actual</span>
+                  <strong class="access-panel__number" id="study-streak">0</strong>
+                  <span class="access-panel__unit" id="study-streak-unit">días</span>
+                </span>
+              </button>
+
+              <button type="button" class="access-panel" data-category="exercise" aria-pressed="false" aria-controls="exercise-form">
+                <span class="access-panel__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7.5 8v8M4.5 9.5v5M16.5 8v8M19.5 9.5v5M7.5 12h9"/>
+                  </svg>
+                </span>
+                <span class="access-panel__body">
+                  <span class="access-panel__name" data-i18n="exercise">Ejercicio</span>
+                  <span class="access-panel__best"><span data-i18n="bestShort">Mejor</span> <strong id="exercise-best">0</strong> <span id="exercise-best-unit">días</span></span>
+                </span>
+                <span class="access-panel__streak">
+                  <span class="visually-hidden" data-i18n="streakLabel">Racha actual</span>
+                  <strong class="access-panel__number" id="exercise-streak">0</strong>
+                  <span class="access-panel__unit" id="exercise-streak-unit">días</span>
+                </span>
+              </button>
+
+              <button type="button" class="access-panel" data-category="water" aria-pressed="false" aria-controls="water-form">
+                <span class="access-panel__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3.5c3.1 3.6 5.2 6 5.2 9a5.2 5.2 0 0 1-10.4 0c0-3 2.1-5.4 5.2-9Z"/>
+                    <path d="M9.2 14.2c.4 1.1 1.3 1.8 2.6 2"/>
+                  </svg>
+                </span>
+                <span class="access-panel__body">
+                  <span class="access-panel__name" data-i18n="water">Agua</span>
+                  <span class="access-panel__best"><span data-i18n="bestShort">Mejor</span> <strong id="water-best">0</strong> <span id="water-best-unit">días</span></span>
+                </span>
+                <span class="access-panel__streak">
+                  <span class="visually-hidden" data-i18n="streakLabel">Racha actual</span>
+                  <strong class="access-panel__number" id="water-streak">0</strong>
+                  <span class="access-panel__unit" id="water-streak-unit">días</span>
+                </span>
+              </button>
+            </div>
+
+            <div class="streaks__mark" aria-hidden="true">
             <svg class="fruit-mark fruit--lima" viewBox="0 0 240 240" focusable="false">
               <defs>
                 <clipPath id="lime-clip">
@@ -183,46 +231,121 @@
                 <circle class="fruit-berry-light" cx="113" cy="173" r="4.5"/>
               </g>
             </svg>
+            </div>
           </div>
         </section>
 
-        <section class="card" aria-labelledby="new-session-title">
-          <h2 class="card__title" id="new-session-title" data-i18n="newSession">Nueva sesión</h2>
+        <section class="card" aria-labelledby="form-title">
+          <h2 class="card__title" id="form-title">Nueva sesión</h2>
 
-          <form id="session-form" class="form">
+          <form id="study-form" class="form" data-form-category="study" aria-labelledby="form-title">
             <div class="field">
-              <label for="date" data-i18n="date">Fecha</label>
-              <input type="date" id="date" name="date" required>
+              <label for="study-date" data-i18n="date">Fecha</label>
+              <input type="date" id="study-date" name="date" required>
             </div>
 
             <div class="field">
-              <label for="topic" data-i18n="topic">Tema de estudio</label>
-              <input type="text" id="topic" name="topic" placeholder="Ej.: Repasar JavaScript" required data-i18n-placeholder="topicPlaceholder">
+              <label for="study-topic" data-i18n="topic">Tema de estudio</label>
+              <input type="text" id="study-topic" name="topic" placeholder="Ej.: Repasar JavaScript" required data-i18n-placeholder="topicPlaceholder">
             </div>
 
             <div class="field">
-              <label for="notes" data-i18n="notes">Notas</label>
-              <textarea id="notes" name="notes" rows="3" placeholder="Ej.: Dudas, ideas o algo para recordar" data-i18n-placeholder="notesPlaceholder"></textarea>
+              <label for="study-notes" data-i18n="notes">Notas</label>
+              <textarea id="study-notes" name="notes" rows="3" placeholder="Ej.: Dudas, ideas o algo para recordar" data-i18n-placeholder="notesPlaceholder"></textarea>
             </div>
 
             <div class="field">
-              <label for="minutes" data-i18n="minutes">Minutos</label>
-              <input type="number" id="minutes" name="minutes" min="1" step="1" inputmode="numeric" placeholder="Ej.: 45" required data-i18n-placeholder="minutesPlaceholder">
+              <label for="study-minutes" data-i18n="minutes">Minutos</label>
+              <input type="number" id="study-minutes" name="minutes" min="1" step="1" inputmode="numeric" placeholder="Ej.: 45" required data-i18n-placeholder="minutesPlaceholder">
             </div>
 
             <button type="submit" class="button" data-i18n="submit">Registrar sesión</button>
           </form>
 
-          <p class="form__note" data-i18n="formNote">Tus sesiones quedan guardadas en este navegador.</p>
+          <form id="exercise-form" class="form" data-form-category="exercise" aria-labelledby="form-title" hidden>
+            <div class="field">
+              <label for="exercise-date" data-i18n="date">Fecha</label>
+              <input type="date" id="exercise-date" name="date" required>
+            </div>
+
+            <div class="field">
+              <label for="exercise-description" data-i18n="exerciseDescription">Descripción del ejercicio</label>
+              <input type="text" id="exercise-description" name="description" placeholder="Ej.: Trote suave y elongación" required data-i18n-placeholder="exerciseDescriptionPlaceholder">
+            </div>
+
+            <div class="field">
+              <label for="exercise-type" data-i18n="exerciseType">Tipo de ejercicio</label>
+              <select id="exercise-type" name="type" required>
+                <option value="" disabled selected data-i18n="exerciseTypePlaceholder">Seleccioná un tipo</option>
+                <option value="aerobic" data-i18n="typeAerobic">Aeróbico</option>
+                <option value="walking" data-i18n="typeWalking">Caminata</option>
+                <option value="running" data-i18n="typeRunning">Correr</option>
+                <option value="swimming" data-i18n="typeSwimming">Natación</option>
+                <option value="contact" data-i18n="typeContact">Deporte de contacto</option>
+                <option value="football" data-i18n="typeFootball">Fútbol</option>
+                <option value="basketball" data-i18n="typeBasketball">Básquet</option>
+                <option value="gym" data-i18n="typeGym">Gimnasio / musculación</option>
+                <option value="yoga" data-i18n="typeYoga">Yoga / pilates</option>
+                <option value="cycling" data-i18n="typeCycling">Ciclismo</option>
+                <option value="functional" data-i18n="typeFunctional">Funcional / crossfit</option>
+                <option value="climbing" data-i18n="typeClimbing">Escalada</option>
+                <option value="racket" data-i18n="typeRacket">Tenis / pádel</option>
+                <option value="dance" data-i18n="typeDance">Baile / danza</option>
+                <option value="other" data-i18n="typeOther">Otro</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="exercise-duration" data-i18n="duration">Tiempo (min)</label>
+              <input type="number" id="exercise-duration" name="duration" min="1" step="1" inputmode="numeric" placeholder="Ej.: 30" required data-i18n-placeholder="durationPlaceholder">
+            </div>
+
+            <div class="field">
+              <label for="exercise-place" data-i18n="place">Lugar</label>
+              <select id="exercise-place" name="place" required>
+                <option value="" disabled selected data-i18n="placePlaceholder">Elegí un lugar</option>
+                <option value="home" data-i18n="placeHome">En casa</option>
+                <option value="gym" data-i18n="placeGym">Gym o club</option>
+              </select>
+            </div>
+
+            <button type="submit" class="button" data-i18n="submitExercise">Registrar ejercicio</button>
+          </form>
+
+          <form id="water-form" class="form" data-form-category="water" aria-labelledby="form-title" hidden>
+            <div class="field">
+              <label for="water-date" data-i18n="date">Fecha</label>
+              <input type="date" id="water-date" name="date" required>
+            </div>
+
+            <div class="field">
+              <label for="water-amount" data-i18n="waterAmount">Agua (litros)</label>
+              <input type="number" id="water-amount" name="liters" min="0.1" max="20" step="0.1" inputmode="decimal" placeholder="Ej.: 0,5" required data-i18n-placeholder="waterAmountPlaceholder">
+            </div>
+
+            <div class="water-status" aria-live="polite">
+              <div class="water-status__row">
+                <span class="water-status__total" id="water-status-total">0 L / 2 L</span>
+                <span class="water-status__label" id="water-status-label">Faltan 2 L</span>
+              </div>
+              <div class="water-status__meter" id="water-meter" role="progressbar" aria-valuemin="0" aria-valuemax="2" aria-valuenow="0" aria-label="Progreso de agua del día" data-i18n-aria-label="waterProgressLabel">
+                <span class="water-status__fill" id="water-meter-fill"></span>
+              </div>
+            </div>
+
+            <button type="submit" class="button" data-i18n="submitWater">Registrar agua</button>
+          </form>
+
+          <p class="form__note" id="form-note">Tus sesiones quedan guardadas en este navegador.</p>
         </section>
       </div>
 
       <section class="history" aria-labelledby="history-title">
         <div class="history__head">
-          <h2 class="history__title" id="history-title" data-i18n="sessions">Sesiones</h2>
+          <h2 class="history__title" id="history-title">Sesiones</h2>
           <span class="history__rule" aria-hidden="true"></span>
         </div>
-        <ul id="sessions-list" class="sessions"></ul>
+        <ul id="history-list" class="sessions"></ul>
       </section>
     </main>
   </div>

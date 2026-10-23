@@ -1,7 +1,9 @@
 'use strict';
 
 // Claves de persistencia.
-const STORAGE_KEY = 'diario-de-estudio:sesiones';
+const STUDY_KEY = 'diario-de-estudio:sesiones';
+const EXERCISE_KEY = 'diario-de-estudio:ejercicios';
+const WATER_KEY = 'diario-de-estudio:agua';
 const FRUIT_KEY = 'diario-de-estudio:fruta';
 const LANGUAGE_KEY = 'diario-de-estudio:idioma';
 
@@ -9,14 +11,65 @@ const DEFAULT_FRUIT = 'lima';
 const DEFAULT_LANGUAGE = 'es';
 const FRUITS = ['lima', 'manzana', 'uva'];
 const LANGUAGES = ['es', 'en'];
+const CATEGORIES = ['study', 'exercise', 'water'];
+const WATER_GOAL_LITERS = 2;
+
+const EXERCISE_TYPE_KEYS = {
+  aerobic: 'typeAerobic',
+  walking: 'typeWalking',
+  running: 'typeRunning',
+  swimming: 'typeSwimming',
+  contact: 'typeContact',
+  football: 'typeFootball',
+  basketball: 'typeBasketball',
+  gym: 'typeGym',
+  yoga: 'typeYoga',
+  cycling: 'typeCycling',
+  functional: 'typeFunctional',
+  climbing: 'typeClimbing',
+  racket: 'typeRacket',
+  dance: 'typeDance',
+  other: 'typeOther',
+};
+
+const EXERCISE_PLACE_KEYS = {
+  home: 'placeHome',
+  gym: 'placeGym',
+};
+
+const CATEGORY_CONFIG = {
+  study: {
+    titleKey: 'newSession',
+    noteKey: 'formNote',
+    historyKey: 'sessions',
+    emptyKey: 'empty',
+  },
+  exercise: {
+    titleKey: 'newExercise',
+    noteKey: 'exerciseNote',
+    historyKey: 'exercises',
+    emptyKey: 'emptyExercises',
+  },
+  water: {
+    titleKey: 'newWater',
+    noteKey: 'waterNote',
+    historyKey: 'waterHistory',
+    emptyKey: 'emptyWater',
+  },
+};
 
 const TRANSLATIONS = {
   es: {
     documentTitle: 'Diario de Estudio',
     title: 'Diario de Estudio',
-    intro: 'Registra tus sesiones y mantén viva tu racha.',
+    intro: 'Registra tu estudio, ejercicio y agua. Mantén vivas tus rachas.',
+    streaksTitle: 'Rachas',
+    streaksHint: 'Elegí una categoría para registrar.',
+    study: 'Estudio',
+    exercise: 'Ejercicio',
+    water: 'Agua',
     streakLabel: 'Racha actual',
-    bestStreak: 'Mejor racha',
+    bestShort: 'Mejor',
     day: 'día',
     days: 'días',
     newSession: 'Nueva sesión',
@@ -31,6 +84,47 @@ const TRANSLATIONS = {
     formNote: 'Tus sesiones quedan guardadas en este navegador.',
     sessions: 'Sesiones',
     empty: 'Todavía no hay sesiones. Registra la primera para empezar tu racha.',
+    newExercise: 'Nuevo ejercicio',
+    exerciseDescription: 'Descripción del ejercicio',
+    exerciseDescriptionPlaceholder: 'Ej.: Trote suave y elongación',
+    exerciseType: 'Tipo de ejercicio',
+    exerciseTypePlaceholder: 'Seleccioná un tipo',
+    typeAerobic: 'Aeróbico',
+    typeWalking: 'Caminata',
+    typeRunning: 'Correr',
+    typeSwimming: 'Natación',
+    typeContact: 'Deporte de contacto',
+    typeFootball: 'Fútbol',
+    typeBasketball: 'Básquet',
+    typeGym: 'Gimnasio / musculación',
+    typeYoga: 'Yoga / pilates',
+    typeCycling: 'Ciclismo',
+    typeFunctional: 'Funcional / crossfit',
+    typeClimbing: 'Escalada',
+    typeRacket: 'Tenis / pádel',
+    typeDance: 'Baile / danza',
+    typeOther: 'Otro',
+    duration: 'Tiempo (min)',
+    durationPlaceholder: 'Ej.: 30',
+    place: 'Lugar',
+    placePlaceholder: 'Elegí un lugar',
+    placeHome: 'En casa',
+    placeGym: 'Gym o club',
+    submitExercise: 'Registrar ejercicio',
+    exerciseNote: 'Tus ejercicios quedan guardados en este navegador.',
+    exercises: 'Ejercicios',
+    emptyExercises: 'Todavía no hay ejercicios. Registra el primero para empezar tu racha.',
+    newWater: 'Registrar agua',
+    waterAmount: 'Agua (litros)',
+    waterAmountPlaceholder: 'Ej.: 0,5',
+    submitWater: 'Registrar agua',
+    waterNote: 'Cada registro suma al total del día. La racha se activa al llegar a 2 litros.',
+    waterHistory: 'Agua',
+    emptyWater: 'Todavía no hay registros de agua. Cargá el primero para empezar.',
+    waterGoalMet: 'Meta cumplida',
+    waterRemaining: 'Faltan {amount} L',
+    waterGoalShort: 'Meta 2 L',
+    waterProgressLabel: 'Progreso de agua del día',
     fruitGroup: 'Fruta',
     fruitLima: 'Lima',
     fruitManzana: 'Manzana',
@@ -43,9 +137,14 @@ const TRANSLATIONS = {
   en: {
     documentTitle: 'Study Journal',
     title: 'Study Journal',
-    intro: 'Log your sessions and keep your streak alive.',
+    intro: 'Log your study, exercise, and water. Keep your streaks alive.',
+    streaksTitle: 'Streaks',
+    streaksHint: 'Choose a category to log.',
+    study: 'Study',
+    exercise: 'Exercise',
+    water: 'Water',
     streakLabel: 'Current streak',
-    bestStreak: 'Best streak',
+    bestShort: 'Best',
     day: 'day',
     days: 'days',
     newSession: 'New session',
@@ -60,6 +159,47 @@ const TRANSLATIONS = {
     formNote: 'Your sessions are saved in this browser.',
     sessions: 'Sessions',
     empty: 'No sessions yet. Log your first one to start your streak.',
+    newExercise: 'New workout',
+    exerciseDescription: 'Exercise description',
+    exerciseDescriptionPlaceholder: 'E.g. Light jog and stretching',
+    exerciseType: 'Exercise type',
+    exerciseTypePlaceholder: 'Select a type',
+    typeAerobic: 'Aerobic',
+    typeWalking: 'Walking',
+    typeRunning: 'Running',
+    typeSwimming: 'Swimming',
+    typeContact: 'Contact sport',
+    typeFootball: 'Football',
+    typeBasketball: 'Basketball',
+    typeGym: 'Gym / strength',
+    typeYoga: 'Yoga / pilates',
+    typeCycling: 'Cycling',
+    typeFunctional: 'Functional / CrossFit',
+    typeClimbing: 'Climbing',
+    typeRacket: 'Tennis / padel',
+    typeDance: 'Dance',
+    typeOther: 'Other',
+    duration: 'Time (min)',
+    durationPlaceholder: 'E.g. 30',
+    place: 'Place',
+    placePlaceholder: 'Choose a place',
+    placeHome: 'At home',
+    placeGym: 'Gym or club',
+    submitExercise: 'Log workout',
+    exerciseNote: 'Your workouts are saved in this browser.',
+    exercises: 'Workouts',
+    emptyExercises: 'No workouts yet. Log your first one to start your streak.',
+    newWater: 'Log water',
+    waterAmount: 'Water (liters)',
+    waterAmountPlaceholder: 'E.g. 0.5',
+    submitWater: 'Log water',
+    waterNote: 'Each entry adds to the daily total. The streak starts at 2 liters.',
+    waterHistory: 'Water',
+    emptyWater: 'No water entries yet. Log your first one to start.',
+    waterGoalMet: 'Goal met',
+    waterRemaining: '{amount} L to go',
+    waterGoalShort: 'Goal 2 L',
+    waterProgressLabel: 'Daily water progress',
     fruitGroup: 'Fruit',
     fruitLima: 'Lime',
     fruitManzana: 'Apple',
@@ -71,16 +211,33 @@ const TRANSLATIONS = {
   },
 };
 
-const form = document.getElementById('session-form');
-const dateInput = document.getElementById('date');
-const topicInput = document.getElementById('topic');
-const notesInput = document.getElementById('notes');
-const minutesInput = document.getElementById('minutes');
-const streakDays = document.getElementById('streak-days');
-const streakUnit = document.getElementById('streak-unit');
-const bestStreakDays = document.getElementById('best-streak');
-const bestStreakUnit = document.getElementById('best-streak-unit');
-const sessionsList = document.getElementById('sessions-list');
+const studyForm = document.getElementById('study-form');
+const studyDateInput = document.getElementById('study-date');
+const studyTopicInput = document.getElementById('study-topic');
+const studyNotesInput = document.getElementById('study-notes');
+const studyMinutesInput = document.getElementById('study-minutes');
+
+const exerciseForm = document.getElementById('exercise-form');
+const exerciseDateInput = document.getElementById('exercise-date');
+const exerciseDescriptionInput = document.getElementById('exercise-description');
+const exerciseTypeInput = document.getElementById('exercise-type');
+const exerciseDurationInput = document.getElementById('exercise-duration');
+const exercisePlaceInput = document.getElementById('exercise-place');
+
+const waterForm = document.getElementById('water-form');
+const waterDateInput = document.getElementById('water-date');
+const waterAmountInput = document.getElementById('water-amount');
+const waterStatusTotal = document.getElementById('water-status-total');
+const waterStatusLabel = document.getElementById('water-status-label');
+const waterMeter = document.getElementById('water-meter');
+const waterMeterFill = document.getElementById('water-meter-fill');
+
+const formTitle = document.getElementById('form-title');
+const formNote = document.getElementById('form-note');
+const historyTitle = document.getElementById('history-title');
+const historyList = document.getElementById('history-list');
+const categoryButtons = document.querySelectorAll('[data-category]');
+const categoryForms = document.querySelectorAll('[data-form-category]');
 const fruitButtons = document.querySelectorAll('[data-fruit-value]');
 const languageButtons = document.querySelectorAll('[data-language-value]');
 const translatableElements = document.querySelectorAll('[data-i18n]');
@@ -88,9 +245,33 @@ const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]')
 const ariaLabelElements = document.querySelectorAll('[data-i18n-aria-label]');
 const titleElements = document.querySelectorAll('[data-i18n-title]');
 
-let sessions = loadSessions();
+const streakRefs = {
+  study: {
+    current: document.getElementById('study-streak'),
+    currentUnit: document.getElementById('study-streak-unit'),
+    best: document.getElementById('study-best'),
+    bestUnit: document.getElementById('study-best-unit'),
+  },
+  exercise: {
+    current: document.getElementById('exercise-streak'),
+    currentUnit: document.getElementById('exercise-streak-unit'),
+    best: document.getElementById('exercise-best'),
+    bestUnit: document.getElementById('exercise-best-unit'),
+  },
+  water: {
+    current: document.getElementById('water-streak'),
+    currentUnit: document.getElementById('water-streak-unit'),
+    best: document.getElementById('water-best'),
+    bestUnit: document.getElementById('water-best-unit'),
+  },
+};
+
+let studySessions = loadCollection(STUDY_KEY);
+let exercises = loadCollection(EXERCISE_KEY);
+let waterEntries = loadCollection(WATER_KEY);
 let fruit = loadChoice(FRUIT_KEY, FRUITS, DEFAULT_FRUIT);
 let language = loadChoice(LANGUAGE_KEY, LANGUAGES, DEFAULT_LANGUAGE);
+let activeCategory = 'study';
 
 function t(key) {
   return TRANSLATIONS[language][key] ?? key;
@@ -209,11 +390,11 @@ function isValidISODate(isoDate) {
   );
 }
 
-// ---------- Persistencia de sesiones ----------
+// ---------- Persistencia ----------
 
-function loadSessions() {
+function loadCollection(key) {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(key);
     if (!stored) {
       return [];
     }
@@ -224,28 +405,79 @@ function loadSessions() {
   }
 }
 
-function saveSessions() {
+function saveCollection(key, data, label) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+    localStorage.setItem(key, JSON.stringify(data));
   } catch (error) {
     // Si el navegador bloquea localStorage, la app sigue funcionando en memoria.
-    console.warn('No se pudieron guardar las sesiones:', error);
+    console.warn(`No se pudieron guardar ${label}:`, error);
   }
 }
 
-// ---------- Racha ----------
+function saveStudySessions() {
+  saveCollection(STUDY_KEY, studySessions, 'las sesiones');
+}
 
-function calculateStreak() {
-  const daysWithSessions = new Set(sessions.map((session) => session.date));
+function saveExercises() {
+  saveCollection(EXERCISE_KEY, exercises, 'los ejercicios');
+}
 
-  // Si hoy no hay sesión, la racha puede seguir viva gracias a ayer.
+function saveWaterEntries() {
+  saveCollection(WATER_KEY, waterEntries, 'el agua');
+}
+
+// ---------- Rachas ----------
+
+function validDatesFrom(entries) {
+  return [
+    ...new Set(
+      entries
+        .map((entry) => entry.date)
+        .filter((date) => isValidISODate(date))
+    ),
+  ];
+}
+
+function getWaterTotals() {
+  const totals = new Map();
+
+  for (const entry of waterEntries) {
+    if (!isValidISODate(entry.date)) {
+      continue;
+    }
+
+    const liters = Number(entry.liters);
+    if (!Number.isFinite(liters) || liters <= 0) {
+      continue;
+    }
+
+    totals.set(entry.date, (totals.get(entry.date) ?? 0) + liters);
+  }
+
+  return totals;
+}
+
+function isWaterGoalMet(totalLiters) {
+  return Math.round(totalLiters * 1000) >= WATER_GOAL_LITERS * 1000;
+}
+
+function getWaterGoalDates() {
+  return [...getWaterTotals().entries()]
+    .filter(([, total]) => isWaterGoalMet(total))
+    .map(([date]) => date);
+}
+
+function calculateCurrentStreak(days) {
+  const daySet = new Set(days);
+
+  // Si hoy no hay registro, la racha puede seguir viva gracias a ayer.
   let cursor = todayISO();
-  if (!daysWithSessions.has(cursor)) {
+  if (!daySet.has(cursor)) {
     cursor = addDays(cursor, -1);
   }
 
   let streak = 0;
-  while (daysWithSessions.has(cursor)) {
+  while (daySet.has(cursor)) {
     streak += 1;
     cursor = addDays(cursor, -1);
   }
@@ -253,18 +485,18 @@ function calculateStreak() {
   return streak;
 }
 
-function calculateBestStreak() {
+function calculateBestStreak(days) {
   const today = todayISO();
-  const days = [...new Set(sessions.map((session) => session.date))]
+  const sortedDays = [...new Set(days)]
     // Las fechas futuras todavía no cuentan como racha conseguida.
-    .filter((date) => isValidISODate(date) && date <= today)
+    .filter((date) => date <= today)
     .sort();
 
   let best = 0;
   let run = 0;
   let previous = '';
 
-  for (const date of days) {
+  for (const date of sortedDays) {
     if (previous !== '' && date === addDays(previous, 1)) {
       run += 1;
     } else {
@@ -278,80 +510,231 @@ function calculateBestStreak() {
   return best;
 }
 
-// ---------- Interfaz ----------
+function renderStreakPanel(category, days) {
+  const refs = streakRefs[category];
+  const current = calculateCurrentStreak(days);
+  const best = calculateBestStreak(days);
 
-function renderStreak() {
-  const streak = calculateStreak();
-  const bestStreak = calculateBestStreak();
-
-  streakDays.textContent = String(streak);
-  streakUnit.textContent = streak === 1 ? t('day') : t('days');
-
-  bestStreakDays.textContent = String(bestStreak);
-  bestStreakUnit.textContent = bestStreak === 1 ? t('day') : t('days');
+  refs.current.textContent = String(current);
+  refs.currentUnit.textContent = current === 1 ? t('day') : t('days');
+  refs.best.textContent = String(best);
+  refs.bestUnit.textContent = best === 1 ? t('day') : t('days');
 }
 
-function renderSessions() {
-  sessionsList.replaceChildren();
+function renderStreaks() {
+  renderStreakPanel('study', validDatesFrom(studySessions));
+  renderStreakPanel('exercise', validDatesFrom(exercises));
+  renderStreakPanel('water', getWaterGoalDates());
+}
 
-  if (sessions.length === 0) {
+// ---------- Formato ----------
+
+function formatLiters(liters) {
+  return new Intl.NumberFormat(t('locale'), {
+    maximumFractionDigits: 2,
+  }).format(liters);
+}
+
+function exerciseTypeLabel(type) {
+  return t(EXERCISE_TYPE_KEYS[type] ?? 'typeOther');
+}
+
+function exercisePlaceLabel(place) {
+  return t(EXERCISE_PLACE_KEYS[place] ?? 'placeHome');
+}
+
+// ---------- Interfaz ----------
+
+function renderActiveCategory() {
+  const config = CATEGORY_CONFIG[activeCategory];
+
+  formTitle.textContent = t(config.titleKey);
+  formNote.textContent = t(config.noteKey);
+  historyTitle.textContent = t(config.historyKey);
+
+  for (const button of categoryButtons) {
+    button.setAttribute(
+      'aria-pressed',
+      String(button.dataset.category === activeCategory)
+    );
+  }
+
+  for (const form of categoryForms) {
+    form.hidden = form.dataset.formCategory !== activeCategory;
+  }
+}
+
+function createHistoryItem({
+  dateValue,
+  title,
+  detail = '',
+  detailClass = 'session__notes',
+  metric,
+}) {
+  const item = document.createElement('li');
+  item.className = 'session';
+
+  const date = document.createElement('time');
+  date.className = 'session__date';
+  date.dateTime = dateValue;
+  date.textContent = formatDate(dateValue);
+
+  const info = document.createElement('div');
+  info.className = 'session__info';
+
+  const heading = document.createElement('h3');
+  heading.className = 'session__topic';
+  heading.textContent = title;
+  info.append(heading);
+
+  if (detail !== '') {
+    const detailNode = document.createElement('p');
+    detailNode.className = detailClass;
+    detailNode.textContent = detail;
+    info.append(detailNode);
+  }
+
+  const metricNode = document.createElement('span');
+  metricNode.className = 'session__minutes';
+  metricNode.textContent = metric;
+
+  item.append(date, info, metricNode);
+  return item;
+}
+
+function renderStudyHistory() {
+  return [...studySessions]
+    .sort((a, b) => {
+      if (a.date !== b.date) {
+        return a.date < b.date ? 1 : -1;
+      }
+      return (b.createdAt ?? 0) - (a.createdAt ?? 0);
+    })
+    .map((session) => {
+      const notes =
+        typeof session.notes === 'string' ? session.notes.trim() : '';
+      return createHistoryItem({
+        dateValue: session.date,
+        title: session.topic,
+        detail: notes,
+        detailClass: 'session__notes',
+        metric: `${session.minutes} min`,
+      });
+    });
+}
+
+function renderExerciseHistory() {
+  return [...exercises]
+    .sort((a, b) => {
+      if (a.date !== b.date) {
+        return a.date < b.date ? 1 : -1;
+      }
+      return (b.createdAt ?? 0) - (a.createdAt ?? 0);
+    })
+    .map((exercise) => createHistoryItem({
+      dateValue: exercise.date,
+      title: exercise.description,
+      detail: `${exerciseTypeLabel(exercise.type)} · ${exercisePlaceLabel(exercise.place)}`,
+      detailClass: 'session__meta',
+      metric: `${exercise.duration} min`,
+    }));
+}
+
+function renderWaterHistory() {
+  return [...getWaterTotals().entries()]
+    .sort((a, b) => (a[0] < b[0] ? 1 : -1))
+    .map(([date, total]) => {
+      const remaining = Math.max(0, WATER_GOAL_LITERS - total);
+      const detail = isWaterGoalMet(total)
+        ? t('waterGoalMet')
+        : t('waterRemaining').replace('{amount}', formatLiters(remaining));
+
+      return createHistoryItem({
+        dateValue: date,
+        title: `${formatLiters(total)} L`,
+        detail,
+        detailClass: 'session__meta',
+        metric: t('waterGoalShort'),
+      });
+    });
+}
+
+function renderHistory() {
+  historyList.replaceChildren();
+
+  let items = [];
+  if (activeCategory === 'study') {
+    items = renderStudyHistory();
+  } else if (activeCategory === 'exercise') {
+    items = renderExerciseHistory();
+  } else {
+    items = renderWaterHistory();
+  }
+
+  if (items.length === 0) {
     const empty = document.createElement('li');
     empty.className = 'sessions__empty';
-    empty.textContent = t('empty');
-    sessionsList.append(empty);
+    empty.textContent = t(CATEGORY_CONFIG[activeCategory].emptyKey);
+    historyList.append(empty);
     return;
   }
 
-  // De la más reciente a la más antigua; si comparten fecha, la última creada va primero.
-  const sorted = [...sessions].sort((a, b) => {
-    if (a.date !== b.date) {
-      return a.date < b.date ? 1 : -1;
-    }
-    return (b.createdAt ?? 0) - (a.createdAt ?? 0);
-  });
+  historyList.append(...items);
+}
 
-  for (const session of sorted) {
-    const item = document.createElement('li');
-    item.className = 'session';
+function renderWaterStatus() {
+  const date = waterDateInput.value;
+  const total =
+    date && isValidISODate(date) ? (getWaterTotals().get(date) ?? 0) : 0;
+  const totalText = `${formatLiters(total)} L / ${WATER_GOAL_LITERS} L`;
+  const met = isWaterGoalMet(total);
+  const remaining = Math.max(0, WATER_GOAL_LITERS - total);
 
-    const date = document.createElement('time');
-    date.className = 'session__date';
-    date.dateTime = session.date;
-    date.textContent = formatDate(session.date);
+  waterStatusTotal.textContent = totalText;
+  waterStatusLabel.textContent = met
+    ? t('waterGoalMet')
+    : t('waterRemaining').replace('{amount}', formatLiters(remaining));
+  waterStatusLabel.classList.toggle('is-complete', met);
 
-    const info = document.createElement('div');
-    info.className = 'session__info';
-
-    const topic = document.createElement('h3');
-    topic.className = 'session__topic';
-    topic.textContent = session.topic;
-
-    info.append(topic);
-
-    const notesText =
-      typeof session.notes === 'string' ? session.notes.trim() : '';
-    if (notesText !== '') {
-      const notes = document.createElement('p');
-      notes.className = 'session__notes';
-      notes.textContent = notesText;
-      info.append(notes);
-    }
-
-    const minutes = document.createElement('span');
-    minutes.className = 'session__minutes';
-    minutes.textContent = `${session.minutes} min`;
-
-    item.append(date, info, minutes);
-    sessionsList.append(item);
-  }
+  const ratio = Math.min(1, total / WATER_GOAL_LITERS);
+  waterMeterFill.style.width = `${ratio * 100}%`;
+  waterMeter.setAttribute(
+    'aria-valuenow',
+    String(Math.min(total, WATER_GOAL_LITERS))
+  );
+  waterMeter.setAttribute('aria-valuetext', totalText);
 }
 
 function render() {
-  renderStreak();
-  renderSessions();
+  renderStreaks();
+  renderActiveCategory();
+  renderHistory();
+  renderWaterStatus();
+}
+
+function setActiveCategory(category) {
+  if (!CATEGORIES.includes(category)) {
+    return;
+  }
+  activeCategory = category;
+  render();
+}
+
+function isValidExerciseType(value) {
+  return Object.prototype.hasOwnProperty.call(EXERCISE_TYPE_KEYS, value);
+}
+
+function isValidExercisePlace(value) {
+  return Object.prototype.hasOwnProperty.call(EXERCISE_PLACE_KEYS, value);
 }
 
 // ---------- Eventos ----------
+
+for (const button of categoryButtons) {
+  button.addEventListener('click', () => {
+    setActiveCategory(button.dataset.category);
+  });
+}
 
 for (const button of fruitButtons) {
   button.addEventListener('click', () => {
@@ -365,19 +748,24 @@ for (const button of languageButtons) {
   });
 }
 
-form.addEventListener('submit', (event) => {
+studyForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  const date = dateInput.value;
-  const topic = topicInput.value.trim();
-  const notes = notesInput.value.trim();
-  const minutes = Number(minutesInput.value);
+  const date = studyDateInput.value;
+  const topic = studyTopicInput.value.trim();
+  const notes = studyNotesInput.value.trim();
+  const minutes = Number(studyMinutesInput.value);
 
-  if (!date || topic === '' || !Number.isFinite(minutes) || minutes <= 0) {
+  if (
+    !isValidISODate(date) ||
+    topic === '' ||
+    !Number.isFinite(minutes) ||
+    minutes <= 0
+  ) {
     return;
   }
 
-  sessions.push({
+  studySessions.push({
     date,
     topic,
     notes,
@@ -385,16 +773,87 @@ form.addEventListener('submit', (event) => {
     createdAt: Date.now(),
   });
 
-  saveSessions();
+  saveStudySessions();
   render();
 
-  form.reset();
-  dateInput.value = todayISO();
-  topicInput.focus();
+  studyForm.reset();
+  studyDateInput.value = todayISO();
+  studyTopicInput.focus();
 });
+
+exerciseForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const date = exerciseDateInput.value;
+  const description = exerciseDescriptionInput.value.trim();
+  const type = exerciseTypeInput.value;
+  const duration = Number(exerciseDurationInput.value);
+  const place = exercisePlaceInput.value;
+
+  if (
+    !isValidISODate(date) ||
+    description === '' ||
+    !isValidExerciseType(type) ||
+    !Number.isFinite(duration) ||
+    duration <= 0 ||
+    !isValidExercisePlace(place)
+  ) {
+    return;
+  }
+
+  exercises.push({
+    date,
+    description,
+    type,
+    duration,
+    place,
+    createdAt: Date.now(),
+  });
+
+  saveExercises();
+  render();
+
+  exerciseForm.reset();
+  exerciseDateInput.value = todayISO();
+  exerciseDescriptionInput.focus();
+});
+
+waterForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const date = waterDateInput.value;
+  const liters = Number(waterAmountInput.value);
+
+  if (
+    !isValidISODate(date) ||
+    !Number.isFinite(liters) ||
+    liters <= 0 ||
+    liters > 20
+  ) {
+    return;
+  }
+
+  waterEntries.push({
+    date,
+    liters: Math.round(liters * 1000) / 1000,
+    createdAt: Date.now(),
+  });
+
+  saveWaterEntries();
+  render();
+
+  waterAmountInput.value = '';
+  waterAmountInput.focus();
+});
+
+waterDateInput.addEventListener('change', renderWaterStatus);
+waterDateInput.addEventListener('input', renderWaterStatus);
 
 // ---------- Inicio ----------
 
-dateInput.value = todayISO();
+studyDateInput.value = todayISO();
+exerciseDateInput.value = todayISO();
+waterDateInput.value = todayISO();
+
 applyFruit(fruit);
 applyLanguage(language);
