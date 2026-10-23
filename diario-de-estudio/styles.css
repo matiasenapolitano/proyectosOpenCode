@@ -1,6 +1,6 @@
 :root {
   color-scheme: dark;
-  accent-color: var(--lime);
+  accent-color: var(--accent);
 
   --paper: #070806;
   --panel: #0d0f0b;
@@ -10,21 +10,50 @@
   --line: #262c20;
   --line-strong: #39422f;
   --field-border: #5a684b;
-  --lime: #b8e63c;
-  --lime-pale: #ddf59a;
-  --lime-deep: #5e7a1a;
-  --lime-shade: #93c224;
-  --lime-ink: #0a0d06;
-  --lime-leaf: #6f8f22;
-  --lime-glow-soft: rgba(184, 230, 60, 0.16);
-  --lime-wash: rgba(184, 230, 60, 0.035);
+  --accent: #b8e63c;
+  --accent-pale: #ddf59a;
+  --accent-deep: #5e7a1a;
+  --accent-shade: #93c224;
+  --accent-ink: #0a0d06;
+  --leaf: #6f8f22;
+  --leaf-light: #c5db96;
+  --stem: #4b5b1c;
+  --accent-glow-soft: rgba(184, 230, 60, 0.16);
+  --accent-wash: rgba(184, 230, 60, 0.035);
   --grid-line: rgba(184, 230, 60, 0.028);
   --field: #080a07;
   --field-focus: #0a0d08;
   --radius: 4px;
 
+  --fruit-lima: #b8e63c;
+  --fruit-manzana: #e14b42;
+  --fruit-uva: #b18cf5;
+
   --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* La fruta cambia solo el acento y el icono; la estructura queda intacta. */
+:root[data-fruit="manzana"] {
+  --accent: #e14b42;
+  --accent-pale: #ffb4aa;
+  --accent-deep: #7a2420;
+  --accent-shade: #b7352f;
+  --accent-ink: #1a0705;
+  --accent-glow-soft: rgba(225, 75, 66, 0.18);
+  --accent-wash: rgba(225, 75, 66, 0.045);
+  --grid-line: rgba(225, 75, 66, 0.032);
+}
+
+:root[data-fruit="uva"] {
+  --accent: #b18cf5;
+  --accent-pale: #e4d8ff;
+  --accent-deep: #5b3e8a;
+  --accent-shade: #8a68d8;
+  --accent-ink: #100a1a;
+  --accent-glow-soft: rgba(177, 140, 245, 0.18);
+  --accent-wash: rgba(177, 140, 245, 0.045);
+  --grid-line: rgba(177, 140, 245, 0.032);
 }
 
 * {
@@ -50,12 +79,12 @@ body {
 }
 
 ::selection {
-  background: var(--lime);
-  color: var(--lime-ink);
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--lime);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
@@ -66,13 +95,120 @@ body {
 }
 
 .masthead {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.masthead__top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.35rem;
+}
+
+.masthead__body {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.5fr);
   align-items: end;
   gap: 2rem;
-  margin-bottom: clamp(2rem, 4vw, 3rem);
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--line);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.15rem;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--panel);
+}
+
+.controls__divider {
+  width: 1px;
+  height: 1.25rem;
+  background: var(--line-strong);
+}
+
+.control-button {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.control-button:hover {
+  color: var(--ink);
+  background: var(--accent-wash);
+}
+
+.control-button[aria-pressed="true"] {
+  color: var(--ink);
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.language-button {
+  width: auto;
+  min-width: 2.25rem;
+  padding: 0 0.4rem;
+}
+
+.language-button[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+.fruit-swatch {
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+  overflow: visible;
+}
+
+.fruit-swatch--lima {
+  color: var(--fruit-lima);
+}
+
+.fruit-swatch--manzana {
+  color: var(--fruit-manzana);
+}
+
+.fruit-swatch--uva {
+  color: var(--fruit-uva);
+}
+
+.fruit-button .fruit-swatch {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.fruit-button[aria-pressed="false"] .fruit-swatch {
+  opacity: 0.62;
+}
+
+.fruit-button:hover .fruit-swatch,
+.fruit-button[aria-pressed="true"] .fruit-swatch {
+  opacity: 1;
+}
+
+.fruit-button[aria-pressed="true"] .fruit-swatch {
+  transform: scale(1.05);
 }
 
 .masthead__title {
@@ -86,7 +222,7 @@ body {
 }
 
 .masthead__dot {
-  color: var(--lime);
+  color: var(--accent);
 }
 
 .masthead__intro {
@@ -117,7 +253,7 @@ body {
   overflow: hidden;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-top: 2px solid var(--lime);
+  border-top: 2px solid var(--accent);
   border-radius: var(--radius);
 }
 
@@ -129,7 +265,7 @@ body {
 
 .streak__label {
   margin: 0 0 1.25rem;
-  color: var(--lime);
+  color: var(--accent);
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -184,90 +320,111 @@ body {
 }
 
 .streak__mark svg {
-  display: block;
   width: 100%;
   height: auto;
   overflow: visible;
 }
 
-/* La lima: el cuerpo usa el mismo verde que los detalles de la interfaz. */
-.lime-ring {
+.fruit-mark {
+  display: none;
+}
+
+:root[data-fruit="lima"] .fruit--lima,
+:root[data-fruit="manzana"] .fruit--manzana,
+:root[data-fruit="uva"] .fruit--uva,
+:root:not([data-fruit]) .fruit--lima {
+  display: block;
+}
+
+/* Las tres frutas comparten la misma geometría de detalle y el acento activo. */
+.fruit-ring {
   fill: none;
-  stroke: var(--lime);
+  stroke: var(--accent);
   stroke-width: 1.5;
   stroke-dasharray: 2 8;
   opacity: 0.3;
 }
 
-.lime-glow {
-  fill: var(--lime);
+.fruit-glow {
+  fill: var(--accent);
   opacity: 0.12;
 }
 
-.lime-body {
-  fill: var(--lime);
-  stroke: var(--lime-deep);
+.fruit-body {
+  fill: var(--accent);
+  stroke: var(--accent-deep);
   stroke-width: 3;
 }
 
-.lime-shade {
-  fill: var(--lime-shade);
+.fruit-shade {
+  fill: var(--accent-shade);
   opacity: 0.55;
 }
 
-.lime-highlight {
+.fruit-highlight {
   fill: none;
-  stroke: var(--lime-pale);
+  stroke: var(--accent-pale);
   stroke-width: 10;
   stroke-linecap: round;
   opacity: 0.55;
 }
 
-.lime-shadow-line {
+.fruit-shadow-line {
   fill: none;
-  stroke: var(--lime-deep);
+  stroke: var(--accent-deep);
   stroke-width: 8;
   stroke-linecap: round;
   opacity: 0.25;
 }
 
-.lime-speck {
-  fill: var(--lime-deep);
+.fruit-speck {
+  fill: var(--accent-deep);
   opacity: 0.4;
 }
 
-.lime-stem {
+.fruit-stem {
   fill: none;
-  stroke: var(--lime-deep);
+  stroke: var(--stem);
   stroke-width: 4;
   stroke-linecap: round;
 }
 
-.lime-leaf {
-  fill: var(--lime-leaf);
-  stroke: var(--lime-deep);
+.fruit-leaf {
+  fill: var(--leaf);
+  stroke: var(--stem);
   stroke-width: 2.5;
   stroke-linejoin: round;
 }
 
-.lime-vein {
+.fruit-vein {
   fill: none;
-  stroke: var(--lime-pale);
+  stroke: var(--leaf-light);
   stroke-width: 2;
   stroke-linecap: round;
   opacity: 0.8;
 }
 
-.lime-tip {
+.fruit-berry {
+  fill: var(--accent);
+  stroke: var(--accent-deep);
+  stroke-width: 2.5;
+}
+
+.fruit-berry-light {
+  fill: var(--accent-pale);
+  opacity: 0.5;
+}
+
+.fruit-tip {
   fill: none;
-  stroke: var(--lime-deep);
+  stroke: var(--accent-deep);
   stroke-width: 2;
   stroke-linecap: round;
 }
 
-.lime-top-light {
+.fruit-top-light {
   fill: none;
-  stroke: var(--lime-pale);
+  stroke: var(--accent-pale);
   stroke-width: 2.5;
   stroke-linecap: round;
   opacity: 0.5;
@@ -326,23 +483,23 @@ body {
 }
 
 .field input:hover {
-  border-color: var(--lime-deep);
+  border-color: var(--accent-deep);
 }
 
 .field input:focus {
   outline: none;
-  border-color: var(--lime);
+  border-color: var(--accent);
   background: var(--field-focus);
-  box-shadow: 0 0 0 3px var(--lime-glow-soft);
+  box-shadow: 0 0 0 3px var(--accent-glow-soft);
 }
 
 .button {
   margin-top: 0.35rem;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--lime);
+  border: 1px solid var(--accent);
   border-radius: 3px;
-  background: var(--lime);
-  color: var(--lime-ink);
+  background: var(--accent);
+  color: var(--accent-ink);
   font: inherit;
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -351,8 +508,8 @@ body {
 }
 
 .button:hover {
-  background: var(--lime-pale);
-  border-color: var(--lime-pale);
+  background: var(--accent-pale);
+  border-color: var(--accent-pale);
 }
 
 .button:active {
@@ -415,8 +572,8 @@ body {
 }
 
 .session:hover {
-  background: var(--lime-wash);
-  box-shadow: inset 2px 0 0 var(--lime);
+  background: var(--accent-wash);
+  box-shadow: inset 2px 0 0 var(--accent);
 }
 
 .session__date {
@@ -445,7 +602,7 @@ body {
 }
 
 .session__minutes {
-  color: var(--lime);
+  color: var(--accent);
   font-size: 0.8rem;
   font-weight: 700;
   white-space: nowrap;
@@ -466,11 +623,11 @@ body {
 
 @media (prefers-reduced-motion: no-preference) {
   .streak__mark svg {
-    animation: lime-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation: fruit-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
     transform-origin: 50% 55%;
   }
 
-  @keyframes lime-in {
+  @keyframes fruit-in {
     from {
       opacity: 0;
       transform: rotate(-4deg) scale(0.92);
@@ -484,7 +641,7 @@ body {
 }
 
 @media (max-width: 860px) {
-  .masthead {
+  .masthead__body {
     grid-template-columns: 1fr;
     gap: 1rem;
   }

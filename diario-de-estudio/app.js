@@ -1,7 +1,71 @@
 'use strict';
 
-// Clave de persistencia de las sesiones.
+// Claves de persistencia.
 const STORAGE_KEY = 'diario-de-estudio:sesiones';
+const FRUIT_KEY = 'diario-de-estudio:fruta';
+const LANGUAGE_KEY = 'diario-de-estudio:idioma';
+
+const DEFAULT_FRUIT = 'lima';
+const DEFAULT_LANGUAGE = 'es';
+const FRUITS = ['lima', 'manzana', 'uva'];
+const LANGUAGES = ['es', 'en'];
+
+const TRANSLATIONS = {
+  es: {
+    documentTitle: 'Diario de Estudio',
+    title: 'Diario de Estudio',
+    intro: 'Registra tus sesiones y mantén viva tu racha.',
+    streakLabel: 'Racha actual',
+    bestStreak: 'Mejor racha',
+    day: 'día',
+    days: 'días',
+    newSession: 'Nueva sesión',
+    date: 'Fecha',
+    topic: 'Tema',
+    topicPlaceholder: 'Ej.: Repasar JavaScript',
+    minutes: 'Minutos',
+    minutesPlaceholder: 'Ej.: 45',
+    submit: 'Registrar sesión',
+    formNote: 'Tus sesiones quedan guardadas en este navegador.',
+    sessions: 'Sesiones',
+    empty: 'Todavía no hay sesiones. Registra la primera para empezar tu racha.',
+    fruitGroup: 'Fruta',
+    fruitLima: 'Lima',
+    fruitManzana: 'Manzana',
+    fruitUva: 'Uva',
+    languageGroup: 'Idioma',
+    languageSpanish: 'Español',
+    languageEnglish: 'Inglés',
+    locale: 'es-ES',
+  },
+  en: {
+    documentTitle: 'Study Journal',
+    title: 'Study Journal',
+    intro: 'Log your sessions and keep your streak alive.',
+    streakLabel: 'Current streak',
+    bestStreak: 'Best streak',
+    day: 'day',
+    days: 'days',
+    newSession: 'New session',
+    date: 'Date',
+    topic: 'Topic',
+    topicPlaceholder: 'E.g. Review JavaScript',
+    minutes: 'Minutes',
+    minutesPlaceholder: 'E.g. 45',
+    submit: 'Log session',
+    formNote: 'Your sessions are saved in this browser.',
+    sessions: 'Sessions',
+    empty: 'No sessions yet. Log your first one to start your streak.',
+    fruitGroup: 'Fruit',
+    fruitLima: 'Lime',
+    fruitManzana: 'Apple',
+    fruitUva: 'Grape',
+    languageGroup: 'Language',
+    languageSpanish: 'Spanish',
+    languageEnglish: 'English',
+    locale: 'en-US',
+  },
+};
 
 const form = document.getElementById('session-form');
 const dateInput = document.getElementById('date');
@@ -12,8 +76,85 @@ const streakUnit = document.getElementById('streak-unit');
 const bestStreakDays = document.getElementById('best-streak');
 const bestStreakUnit = document.getElementById('best-streak-unit');
 const sessionsList = document.getElementById('sessions-list');
+const fruitButtons = document.querySelectorAll('[data-fruit-value]');
+const languageButtons = document.querySelectorAll('[data-language-value]');
+const translatableElements = document.querySelectorAll('[data-i18n]');
+const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+const ariaLabelElements = document.querySelectorAll('[data-i18n-aria-label]');
+const titleElements = document.querySelectorAll('[data-i18n-title]');
 
 let sessions = loadSessions();
+let fruit = loadChoice(FRUIT_KEY, FRUITS, DEFAULT_FRUIT);
+let language = loadChoice(LANGUAGE_KEY, LANGUAGES, DEFAULT_LANGUAGE);
+
+function t(key) {
+  return TRANSLATIONS[language][key] ?? key;
+}
+
+// ---------- Preferencias ----------
+
+function loadChoice(key, allowed, fallback) {
+  try {
+    const stored = localStorage.getItem(key);
+    return allowed.includes(stored) ? stored : fallback;
+  } catch (error) {
+    return fallback;
+  }
+}
+
+function saveChoice(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {
+    console.warn('No se pudo guardar la preferencia:', error);
+  }
+}
+
+function applyFruit(nextFruit) {
+  fruit = FRUITS.includes(nextFruit) ? nextFruit : DEFAULT_FRUIT;
+  document.documentElement.dataset.fruit = fruit;
+
+  for (const button of fruitButtons) {
+    button.setAttribute(
+      'aria-pressed',
+      String(button.dataset.fruitValue === fruit)
+    );
+  }
+
+  saveChoice(FRUIT_KEY, fruit);
+}
+
+function applyLanguage(nextLanguage) {
+  language = LANGUAGES.includes(nextLanguage) ? nextLanguage : DEFAULT_LANGUAGE;
+  document.documentElement.lang = language;
+  document.title = t('documentTitle');
+
+  for (const element of translatableElements) {
+    element.textContent = t(element.dataset.i18n);
+  }
+
+  for (const element of placeholderElements) {
+    element.placeholder = t(element.dataset.i18nPlaceholder);
+  }
+
+  for (const element of ariaLabelElements) {
+    element.setAttribute('aria-label', t(element.dataset.i18nAriaLabel));
+  }
+
+  for (const element of titleElements) {
+    element.title = t(element.dataset.i18nTitle);
+  }
+
+  for (const button of languageButtons) {
+    button.setAttribute(
+      'aria-pressed',
+      String(button.dataset.languageValue === language)
+    );
+  }
+
+  saveChoice(LANGUAGE_KEY, language);
+  render();
+}
 
 // ---------- Fechas (siempre en hora local) ----------
 
@@ -39,7 +180,7 @@ function formatDate(isoDate) {
   const [year, month, day] = isoDate.split('-').map(Number);
   const date = new Date(year, month - 1, day);
   return date
-    .toLocaleDateString('es-ES', {
+    .toLocaleDateString(t('locale'), {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
@@ -63,7 +204,7 @@ function isValidISODate(isoDate) {
   );
 }
 
-// ---------- Persistencia ----------
+// ---------- Persistencia de sesiones ----------
 
 function loadSessions() {
   try {
@@ -139,10 +280,10 @@ function renderStreak() {
   const bestStreak = calculateBestStreak();
 
   streakDays.textContent = String(streak);
-  streakUnit.textContent = streak === 1 ? 'día' : 'días';
+  streakUnit.textContent = streak === 1 ? t('day') : t('days');
 
   bestStreakDays.textContent = String(bestStreak);
-  bestStreakUnit.textContent = bestStreak === 1 ? 'día' : 'días';
+  bestStreakUnit.textContent = bestStreak === 1 ? t('day') : t('days');
 }
 
 function renderSessions() {
@@ -151,8 +292,7 @@ function renderSessions() {
   if (sessions.length === 0) {
     const empty = document.createElement('li');
     empty.className = 'sessions__empty';
-    empty.textContent =
-      'Todavía no hay sesiones. Registra la primera para empezar tu racha.';
+    empty.textContent = t('empty');
     sessionsList.append(empty);
     return;
   }
@@ -199,6 +339,18 @@ function render() {
 
 // ---------- Eventos ----------
 
+for (const button of fruitButtons) {
+  button.addEventListener('click', () => {
+    applyFruit(button.dataset.fruitValue);
+  });
+}
+
+for (const button of languageButtons) {
+  button.addEventListener('click', () => {
+    applyLanguage(button.dataset.languageValue);
+  });
+}
+
 form.addEventListener('submit', (event) => {
   event.preventDefault();
 
@@ -228,4 +380,5 @@ form.addEventListener('submit', (event) => {
 // ---------- Inicio ----------
 
 dateInput.value = todayISO();
-render();
+applyFruit(fruit);
+applyLanguage(language);
