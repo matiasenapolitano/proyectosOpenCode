@@ -3,12 +3,15 @@
 ## Proyecto
 
 - Web estática de tres archivos: `index.html`, `styles.css` y `app.js`. Sin frameworks, librerías, build, lint ni tests.
-- La estética base es un cuaderno nocturno: fondo casi negro con una grilla oliva muy sutil, paneles oscuros, tipografía editorial y acentos de fruta.
+- La estética base es un cuaderno nocturno: fondo casi negro, grilla tenue teñida por el acento, paneles oscuros, tipografía editorial y acentos de fruta.
 - Hay tres variantes visuales de fruta: lima `#B8E63C` (predeterminada), manzana `#E14B42` y uva `#B18CF5`.
 - La fruta cambia únicamente el acento de la interfaz y el icono SVG de la racha. No cambiar estructura, layout, tipografía, espaciado, formulario ni historial al agregar variantes.
+- Los neutros de la interfaz (`--paper`, `--panel`, `--ink`, `--ink-soft`, `--muted`, `--line`, `--line-strong`, `--field-border`, `--field`, `--field-focus`) deben ser grises cálidos neutros, nunca oliva ni verdes. Al cambiar a manzana o uva no deben quedar bordes, líneas, textos ni campos verdes.
+- El verde solo puede aparecer en el acento lima (incluida la grilla teñida por ese acento) y en el swatch de lima cuando está activo o en hover. Con manzana o uva activos no debe quedar verde visible: los swatches inactivos se muestran en escala de grises.
+- El icono de fruta completo (cuerpo, hoja, tallo, venas y detalles) se colorea con `--accent`, `--accent-deep` y `--accent-pale`; no hay tokens verdes para hojas o tallos. El verde de la lima es solo consecuencia de su acento.
 - El control de fruta y el selector de idioma viven juntos en la parte superior derecha del masthead. No moverlos a otra zona sin pedido explícito.
 - La fruta activa se expresa con `data-fruit` en `<html>`: `lima`, `manzana` o `uva`. Los tokens de acento son `--accent`, `--accent-pale`, `--accent-deep`, `--accent-shade`, `--accent-ink`, `--accent-glow-soft` y `--accent-wash`.
-- Los colores fijos de los swatches del selector son `--fruit-lima`, `--fruit-manzana` y `--fruit-uva`; las hojas y tallos conservan verdes naturales con `--leaf`, `--leaf-light` y `--stem`. No usar el acento de la fruta para las hojas.
+- Los colores fijos de los swatches del selector son `--fruit-lima`, `--fruit-manzana` y `--fruit-uva`; los inactivos usan `filter: grayscale(1)` y opacidad reducida. El activo, el hover y el foco visible recuperan su color.
 
 ## Idiomas
 
@@ -27,6 +30,8 @@
 
 - Persistencia de sesiones en `localStorage` con la clave `diario-de-estudio:sesiones`. No cambiarla sin migrar los datos existentes.
 - Persistencia de la fruta en `diario-de-estudio:fruta` y del idioma en `diario-de-estudio:idioma`.
+- Cada sesión guarda `date`, `topic`, `notes`, `minutes` y `createdAt`. `notes` es opcional; si está vacío o ausente, el historial no muestra esa línea. No romper sesiones antiguas sin `notes`.
+- El formulario tiene fecha, tema de estudio, notas y minutos, en ese orden. Las notas se muestran en el historial con saltos de línea preservados.
 - Las claves antiguas `diario-de-estudio:tema` y `diario-de-estudio:icono` quedaron sin uso; no leerlas ni escribir en ellas.
 - Un script temprano en `<head>` aplica la fruta y el idioma guardados antes de pintar para reducir parpadeos.
 - Racha: días consecutivos con al menos una sesión; si hoy no hay sesión, arranca desde ayer; se corta en el primer día sin sesión. La lógica está en `calculateStreak()`.

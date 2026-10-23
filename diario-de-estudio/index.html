@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#070806">
+  <meta name="theme-color" content="#080807">
   <script>
     // Aplica fruta e idioma guardados antes de pintar para evitar saltos visuales.
     try {
@@ -32,22 +32,22 @@
             <button type="button" class="control-button fruit-button" data-fruit-value="lima" aria-label="Lima" title="Lima" aria-pressed="true" data-i18n-aria-label="fruitLima" data-i18n-title="fruitLima">
               <svg class="fruit-swatch fruit-swatch--lima" viewBox="0 0 24 24" aria-hidden="true">
                 <ellipse cx="12" cy="13.4" rx="6.2" ry="7.2" fill="currentColor"/>
-                <path d="M13.5 7.2 C14.8 4.2 17.5 3.2 19.4 3.8 C18.9 6.8 16.8 8.4 14 8.4 C13.8 8 13.6 7.6 13.5 7.2 Z" fill="var(--leaf)"/>
-                <path d="M13.7 7.6 C13.5 5.8 13.9 4.3 14.8 3.2" fill="none" stroke="var(--stem)" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M13.5 7.2 C14.8 4.2 17.5 3.2 19.4 3.8 C18.9 6.8 16.8 8.4 14 8.4 C13.8 8 13.6 7.6 13.5 7.2 Z" fill="currentColor" fill-opacity="0.72"/>
+                <path d="M13.7 7.6 C13.5 5.8 13.9 4.3 14.8 3.2" fill="none" stroke="currentColor" stroke-opacity="0.65" stroke-width="1.2" stroke-linecap="round"/>
               </svg>
             </button>
 
             <button type="button" class="control-button fruit-button" data-fruit-value="manzana" aria-label="Manzana" title="Manzana" aria-pressed="false" data-i18n-aria-label="fruitManzana" data-i18n-title="fruitManzana">
               <svg class="fruit-swatch fruit-swatch--manzana" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 7.2 C11 4.6 8.1 4 6.2 5.9 C3.8 8.3 4.2 12.8 6.2 15.7 C7.4 17.5 9 18.8 10.7 18.8 C11.5 18.8 11.7 18.3 12 18.3 C12.3 18.3 12.5 18.8 13.3 18.8 C15 18.8 16.6 17.5 17.8 15.7 C19.8 12.8 20.2 8.3 17.8 5.9 C15.9 4 13 4.6 12 7.2 Z" fill="currentColor"/>
-                <path d="M12 7 C12 5.2 12.7 3.8 14 2.8" fill="none" stroke="var(--stem)" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M14.2 4.3 C15.4 2.4 17.4 1.8 19 2.3 C18.4 4.4 16.9 5.6 14.8 5.6 C14.5 5.2 14.3 4.8 14.2 4.3 Z" fill="var(--leaf)"/>
+                <path d="M12 7 C12 5.2 12.7 3.8 14 2.8" fill="none" stroke="currentColor" stroke-opacity="0.65" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M14.2 4.3 C15.4 2.4 17.4 1.8 19 2.3 C18.4 4.4 16.9 5.6 14.8 5.6 C14.5 5.2 14.3 4.8 14.2 4.3 Z" fill="currentColor" fill-opacity="0.72"/>
               </svg>
             </button>
 
             <button type="button" class="control-button fruit-button" data-fruit-value="uva" aria-label="Uva" title="Uva" aria-pressed="false" data-i18n-aria-label="fruitUva" data-i18n-title="fruitUva">
               <svg class="fruit-swatch fruit-swatch--uva" viewBox="0 0 24 24" aria-hidden="true">
-                <g fill="currentColor" stroke="rgba(7, 8, 6, 0.35)" stroke-width="0.8">
+                <g fill="currentColor" stroke="rgba(0, 0, 0, 0.35)" stroke-width="0.8">
                   <circle cx="9" cy="9.5" r="3.1"/>
                   <circle cx="15" cy="9.5" r="3.1"/>
                   <circle cx="6.8" cy="14.4" r="3.1"/>
@@ -56,8 +56,8 @@
                   <circle cx="9.4" cy="19" r="3.1"/>
                   <circle cx="14.6" cy="19" r="3.1"/>
                 </g>
-                <path d="M12 6 C12 4.5 12.5 3.3 13.5 2.4" fill="none" stroke="var(--stem)" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M13.5 4 C15 2.3 17.2 1.9 18.8 2.5 C18 4.6 16.3 5.7 14.2 5.5 C13.9 5 13.7 4.5 13.5 4 Z" fill="var(--leaf)"/>
+                <path d="M12 6 C12 4.5 12.5 3.3 13.5 2.4" fill="none" stroke="currentColor" stroke-opacity="0.65" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M13.5 4 C15 2.3 17.2 1.9 18.8 2.5 C18 4.6 16.3 5.7 14.2 5.5 C13.9 5 13.7 4.5 13.5 4 Z" fill="currentColor" fill-opacity="0.72"/>
               </svg>
             </button>
           </div>
@@ -196,8 +196,13 @@
             </div>
 
             <div class="field">
-              <label for="topic" data-i18n="topic">Tema</label>
+              <label for="topic" data-i18n="topic">Tema de estudio</label>
               <input type="text" id="topic" name="topic" placeholder="Ej.: Repasar JavaScript" required data-i18n-placeholder="topicPlaceholder">
+            </div>
+
+            <div class="field">
+              <label for="notes" data-i18n="notes">Notas</label>
+              <textarea id="notes" name="notes" rows="3" placeholder="Ej.: Dudas, ideas o algo para recordar" data-i18n-placeholder="notesPlaceholder"></textarea>
             </div>
 
             <div class="field">

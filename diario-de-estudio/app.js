@@ -21,8 +21,10 @@ const TRANSLATIONS = {
     days: 'días',
     newSession: 'Nueva sesión',
     date: 'Fecha',
-    topic: 'Tema',
+    topic: 'Tema de estudio',
     topicPlaceholder: 'Ej.: Repasar JavaScript',
+    notes: 'Notas',
+    notesPlaceholder: 'Ej.: Dudas, ideas o algo para recordar',
     minutes: 'Minutos',
     minutesPlaceholder: 'Ej.: 45',
     submit: 'Registrar sesión',
@@ -48,8 +50,10 @@ const TRANSLATIONS = {
     days: 'days',
     newSession: 'New session',
     date: 'Date',
-    topic: 'Topic',
+    topic: 'Study topic',
     topicPlaceholder: 'E.g. Review JavaScript',
+    notes: 'Notes',
+    notesPlaceholder: 'E.g. Questions, ideas, or something to remember',
     minutes: 'Minutes',
     minutesPlaceholder: 'E.g. 45',
     submit: 'Log session',
@@ -70,6 +74,7 @@ const TRANSLATIONS = {
 const form = document.getElementById('session-form');
 const dateInput = document.getElementById('date');
 const topicInput = document.getElementById('topic');
+const notesInput = document.getElementById('notes');
 const minutesInput = document.getElementById('minutes');
 const streakDays = document.getElementById('streak-days');
 const streakUnit = document.getElementById('streak-unit');
@@ -323,6 +328,15 @@ function renderSessions() {
 
     info.append(topic);
 
+    const notesText =
+      typeof session.notes === 'string' ? session.notes.trim() : '';
+    if (notesText !== '') {
+      const notes = document.createElement('p');
+      notes.className = 'session__notes';
+      notes.textContent = notesText;
+      info.append(notes);
+    }
+
     const minutes = document.createElement('span');
     minutes.className = 'session__minutes';
     minutes.textContent = `${session.minutes} min`;
@@ -356,6 +370,7 @@ form.addEventListener('submit', (event) => {
 
   const date = dateInput.value;
   const topic = topicInput.value.trim();
+  const notes = notesInput.value.trim();
   const minutes = Number(minutesInput.value);
 
   if (!date || topic === '' || !Number.isFinite(minutes) || minutes <= 0) {
@@ -365,6 +380,7 @@ form.addEventListener('submit', (event) => {
   sessions.push({
     date,
     topic,
+    notes,
     minutes,
     createdAt: Date.now(),
   });

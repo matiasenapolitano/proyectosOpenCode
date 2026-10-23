@@ -2,27 +2,24 @@
   color-scheme: dark;
   accent-color: var(--accent);
 
-  --paper: #070806;
-  --panel: #0d0f0b;
-  --ink: #f1f3e8;
-  --ink-soft: #b7bfae;
-  --muted: #7f8974;
-  --line: #262c20;
-  --line-strong: #39422f;
-  --field-border: #5a684b;
+  --paper: #080807;
+  --panel: #10100f;
+  --ink: #f3f1ea;
+  --ink-soft: #c0bbb1;
+  --muted: #89847a;
+  --line: #2b2a27;
+  --line-strong: #423f39;
+  --field-border: #5d5950;
   --accent: #b8e63c;
   --accent-pale: #ddf59a;
   --accent-deep: #5e7a1a;
   --accent-shade: #93c224;
-  --accent-ink: #0a0d06;
-  --leaf: #6f8f22;
-  --leaf-light: #c5db96;
-  --stem: #4b5b1c;
+  --accent-ink: #0b0b0a;
   --accent-glow-soft: rgba(184, 230, 60, 0.16);
   --accent-wash: rgba(184, 230, 60, 0.035);
   --grid-line: rgba(184, 230, 60, 0.028);
-  --field: #080a07;
-  --field-focus: #0a0d08;
+  --field: #0a0a09;
+  --field-focus: #0d0d0b;
   --radius: 4px;
 
   --fruit-lima: #b8e63c;
@@ -195,15 +192,18 @@ body {
 }
 
 .fruit-button .fruit-swatch {
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity 0.15s ease, filter 0.15s ease, transform 0.15s ease;
 }
 
 .fruit-button[aria-pressed="false"] .fruit-swatch {
-  opacity: 0.62;
+  filter: grayscale(1);
+  opacity: 0.52;
 }
 
 .fruit-button:hover .fruit-swatch,
+.fruit-button:focus-visible .fruit-swatch,
 .fruit-button[aria-pressed="true"] .fruit-swatch {
+  filter: none;
   opacity: 1;
 }
 
@@ -384,21 +384,21 @@ body {
 
 .fruit-stem {
   fill: none;
-  stroke: var(--stem);
+  stroke: var(--accent-deep);
   stroke-width: 4;
   stroke-linecap: round;
 }
 
 .fruit-leaf {
-  fill: var(--leaf);
-  stroke: var(--stem);
+  fill: var(--accent);
+  stroke: var(--accent-deep);
   stroke-width: 2.5;
   stroke-linejoin: round;
 }
 
 .fruit-vein {
   fill: none;
-  stroke: var(--leaf-light);
+  stroke: var(--accent-pale);
   stroke-width: 2;
   stroke-linecap: round;
   opacity: 0.8;
@@ -464,7 +464,8 @@ body {
   letter-spacing: 0.01em;
 }
 
-.field input {
+.field input,
+.field textarea {
   width: 100%;
   min-width: 0;
   padding: 0.8rem 0.85rem;
@@ -478,15 +479,24 @@ body {
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
-.field input::placeholder {
+.field textarea {
+  min-height: 5.6rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
   color: var(--muted);
 }
 
-.field input:hover {
+.field input:hover,
+.field textarea:hover {
   border-color: var(--accent-deep);
 }
 
-.field input:focus {
+.field input:focus,
+.field textarea:focus {
   outline: none;
   border-color: var(--accent);
   background: var(--field-focus);
@@ -598,6 +608,15 @@ body {
   font-weight: 400;
   line-height: 1.35;
   letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.session__notes {
+  margin: 0.35rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
